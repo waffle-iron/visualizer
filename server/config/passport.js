@@ -2,9 +2,11 @@
 
 // load all the things we need
 var LocalStrategy = require('passport-local').Strategy;
+var SoundCloudStrategy = require('passport-soundcloud').Strategy;
 
 // load up the user model
 var User = require('../models/user');
+var sc = require('./soundcloud');
 
 // expose this function to our app using module.exports
 module.exports = function(passport) {
@@ -118,5 +120,18 @@ module.exports = function(passport) {
 
 		}));
 
+	passport.use(new SoundCloudStrategy({
+			clientID: sc.id,
+			clientSecret: sc.secret,
+			callbackURL: sc.redirect
+		},
+		function(accessToken, refreshToken, profile, done) {
+			User.findOrCreate({
+				soundcloudId: profile.id
+			}, function(err, user) {
+				return done(err, user);
+			});
+		}
+	));
 
 };

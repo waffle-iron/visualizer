@@ -15,7 +15,7 @@ var session = require('express-session');
 
 // configuration ===============================================================
 try {
-	// mongoose.connect('mongodb://heroku_s5ccgckt:4qs0gmog36h51aj1j1jdfg2lp9@ds151909.mlab.com:51909/heroku_s5ccgckt'); // connect to our database
+	mongoose.connect('mongodb://heroku_s5ccgckt:4qs0gmog36h51aj1j1jdfg2lp9@ds151909.mlab.com:51909/heroku_s5ccgckt'); // connect to our database
 } catch (e) {
 	console.log(e);
 }
@@ -53,8 +53,14 @@ app.get('/album', function(req, res) {
 	externalReq.end();
 });
 
+var audioRoute = require('./routes/audio.js')(passport);
+var authRoute = require('./routes/auth.js')(passport);
+var scRoute = require('./routes/sc.js')(passport);
 var userRoute = require('./routes/user.js')(passport);
 var mainRoute = require('./routes/main.js')(passport);
+app.use('/sc', scRoute);
+app.use('/auth', authRoute);
+app.use('/audio', audioRoute);
 app.use('/user', userRoute);
 app.use('/', mainRoute);
 
