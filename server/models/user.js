@@ -1,6 +1,7 @@
 // models/user.js
 // load the things we need
 var mongoose = require('mongoose');
+var findOrCreate = require('mongoose-findorcreate');
 var bcrypt = require('bcrypt-nodejs');
 
 // define the schema for our user model
@@ -26,6 +27,9 @@ userSchema.methods.generateHash = function(password) {
 userSchema.methods.validPassword = function(password) {
 	return bcrypt.compareSync(password, this.local.password);
 };
+
+//Add findOrCreate plugin
+userSchema.plugin(findOrCreate);
 
 // create the model for users and expose it to our app
 module.exports = mongoose.model('User', userSchema);

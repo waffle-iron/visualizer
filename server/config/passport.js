@@ -122,7 +122,7 @@ module.exports = function(passport) {
 
 
 
-	passport.use(new SoundCloudTokenStrategy({
+	passport.use('soundcloud-token', new SoundCloudTokenStrategy({
 		clientID: sc.id,
 		clientSecret: sc.secret,
 		passReqToCallback: true

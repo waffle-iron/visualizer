@@ -25,6 +25,7 @@
     "express": "^4.14.1",
     "express-session": "^1.15.1",
     "mongoose": "^4.8.2",
+    "mongoose-findorcreate": "^1.0.0",
     "morgan": "^1.8.1",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
@@ -32,6 +33,7 @@
     "passport-soundcloud-token": "^2.1.1",
     "path": "^0.12.7",
     "pug": "^2.0.0-beta11",
+    "request": "^2.79.0",
     "socket.io": "^1.7.2",
     "soundcloud-nodejs-api-wrapper": "^0.3.2",
     "winston": "^2.3.1"

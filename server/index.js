@@ -15,7 +15,7 @@ var session = require('express-session');
 
 // configuration ===============================================================
 try {
-	mongoose.connect('mongodb://heroku_s5ccgckt:4qs0gmog36h51aj1j1jdfg2lp9@ds151909.mlab.com:51909/heroku_s5ccgckt'); // connect to our database
+	// mongoose.connect('mongodb://heroku_s5ccgckt:4qs0gmog36h51aj1j1jdfg2lp9@ds151909.mlab.com:51909/heroku_s5ccgckt'); // connect to our database
 } catch (e) {
 	console.log(e);
 }

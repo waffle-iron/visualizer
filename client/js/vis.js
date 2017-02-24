@@ -84,7 +84,7 @@ setupAudioNodes()
 initSpectrumHandler();
 
 
-function playSoundCloud(url) {
+function playSoundCloud(url, genre) {
 	centerContent();
 	if (isPlaying) {
 		bufferSource.stop();
@@ -92,12 +92,21 @@ function playSoundCloud(url) {
 	}
 	SC.resolve(url).then(function(track) {
 		console.log(track);
-		var s = new Song({
-			title: track.title,
-			artist: track.user.username,
-			genre: "Trap",
-			id: 123
-		});
+		if (genre) {
+			var s = new Song({
+				title: track.title,
+				artist: track.user.username,
+				genre: genre,
+				id: 123
+			});
+		} else {
+			var s = new Song({
+				title: track.title,
+				artist: track.user.username,
+				genre: "EDM",
+				id: 123
+			});
+		}
 
 		loadSong(s);
 
@@ -108,5 +117,23 @@ function playSoundCloud(url) {
 
 		centerContent();
 	});
+	$('#songinfo').css('padding-top', (blockSize - $('#songinfo').height()) / 2);
+}
+
+function playUrl(url, data) {
+	centerContent();
+	if (isPlaying) {
+		bufferSource.stop();
+		loading();
+	}
+	var s = new Song(data);
+
+	loadSong(s);
+
+	initGui(song);
+	setupAudioNodes()
+	loadSound(url);
+
+	centerContent();
 	$('#songinfo').css('padding-top', (blockSize - $('#songinfo').height()) / 2);
 }
