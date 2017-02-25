@@ -5,6 +5,18 @@ if (!window.AudioContext) {
 	window.AudioContext = window.webkitAudioContext;
 }
 
+function getParameterByName(name, url) {
+	if (!url) {
+		url = window.location.href;
+	}
+	name = name.replace(/[\[\]]/g, "\\$&");
+	var regex = new RegExp("[?&]" + name + "(=([^&#]*)|&|#|$)"),
+		results = regex.exec(url);
+	if (!results) return null;
+	if (!results[2]) return '';
+	return decodeURIComponent(results[2].replace(/\+/g, " "));
+}
+
 SC.initialize({
 	client_id: '3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc',
 	redirect_uri: 'http://music.marisusis.me/auth'
@@ -92,6 +104,12 @@ function playSoundCloud(url, genre) {
 	}
 	SC.resolve(url).then(function(track) {
 		console.log(track);
+		if (track.user.username == "Monstercat") {
+			var t = track.title;
+			var d = t.split(" - ");
+			track.title = d[1];
+			track.user.username = d[0];
+		}
 		if (genre) {
 			var s = new Song({
 				title: track.title,
@@ -108,6 +126,8 @@ function playSoundCloud(url, genre) {
 			});
 		}
 
+
+
 		loadSong(s);
 
 		initGui(song);
@@ -116,6 +136,46 @@ function playSoundCloud(url, genre) {
 
 
 		centerContent();
+		// add it to the scene
+		scene.remove(particleSystem);
+		scene.remove(fleckSystem);
+		scene.remove(bokehSystem);
+		pMaterial = new THREE.PointsMaterial({
+			color: 0xFFFFFF,
+			opacity: particleOpacity,
+			size: 5,
+			map: stdTexure,
+			blending: THREE.AdditiveBlending,
+			transparent: true
+		});
+
+		fleckMaterial = new THREE.PointsMaterial({
+			color: color,
+			opacity: particleOpacity,
+			size: 4,
+			map: fleckTexture,
+			blending: THREE.AdditiveBlending,
+			transparent: true
+		});
+
+		bokehMaterial = new THREE.PointsMaterial({
+			color: brighten(color, 2.1),
+			opacity: bokehOpacity,
+			size: 100,
+			map: bokehTexture,
+			blending: THREE.AdditiveBlending,
+			transparent: true
+		});
+		// create the particle systems
+		particleSystem = new THREE.Points(particles, pMaterial);
+		fleckSystem = new THREE.Points(flecks, fleckMaterial);
+		bokehSystem = new THREE.Points(bokeh, bokehMaterial);
+		// add it to the scene
+		scene.add(particleSystem);
+		if (song.getGenre() != 'BTC' && song.getGenre() != 'Mirai Sekai') {
+			scene.add(fleckSystem);
+			scene.add(bokehSystem);
+		}
 	});
 	$('#songinfo').css('padding-top', (blockSize - $('#songinfo').height()) / 2);
 }
@@ -137,3 +197,13 @@ function playUrl(url, data) {
 	centerContent();
 	$('#songinfo').css('padding-top', (blockSize - $('#songinfo').height()) / 2);
 }
+
+var stats = new Stats();
+stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
+document.body.prepend(stats.domElement)
+
+$(document).ready(function() {
+	if (getParameterByName("url")) {
+		playSoundCloud(getParameterByName("url"), "Electro House");
+	}
+});
