@@ -2,7 +2,7 @@
 
 // load all the things we need
 var LocalStrategy = require('passport-local').Strategy;
-var SoundCloudTokenStrategy = require('passport-soundcloud-token');
+var SoundCloudStrategy = require('passport-soundcloud').Strategy;
 
 // load up the user model
 var User = require('../models/user');
@@ -119,19 +119,19 @@ module.exports = function(passport) {
 			});
 
 		}));
-
-
-
-	passport.use('soundcloud-token', new SoundCloudTokenStrategy({
-		clientID: sc.id,
-		clientSecret: sc.secret,
-		passReqToCallback: true
-	}, function(req, accessToken, refreshToken, profile, next) {
-		User.findOrCreate({
-			'soundcloud.id': profile.id
-		}, function(error, user) {
-			return next(error, user);
-		});
-	}));
+	passport.use(new SoundCloudStrategy({
+			clientID: sc.id,
+			clientSecret: sc.secret,
+			callbackURL: "http://music.marisusis.me/auth"
+		},
+		function(accessToken, refreshToken, profile, done) {
+			console.log("sc");
+			User.findOrCreate({
+				'soundcloud.id': profile.id
+			}, function(err, user) {
+				return done(err, user);
+			});
+		}
+	));
 
 };

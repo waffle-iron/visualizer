@@ -55,10 +55,8 @@ app.get('/album', function(req, res) {
 
 var audioRoute = require('./routes/audio.js')(passport);
 var authRoute = require('./routes/auth.js')(passport);
-var scRoute = require('./routes/sc.js')(passport);
 var userRoute = require('./routes/user.js')(passport);
 var mainRoute = require('./routes/main.js')(passport);
-app.use('/sc', scRoute);
 app.use('/auth', authRoute);
 app.use('/audio', audioRoute);
 app.use('/user', userRoute);

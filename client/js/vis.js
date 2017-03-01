@@ -5,6 +5,7 @@ if (!window.AudioContext) {
 	window.AudioContext = window.webkitAudioContext;
 }
 
+
 function getParameterByName(name, url) {
 	if (!url) {
 		url = window.location.href;
@@ -203,7 +204,65 @@ stats.showPanel(0); // 0: fps, 1: ms, 2: mb, 3+: custom
 document.body.prepend(stats.domElement)
 
 $(document).ready(function() {
+	var gui = new dat.GUI();
+	gui.add(opt, 'resistance', 0, 10).onChange(function(e) {
+		window.experimentalTransform = function(a) {
+			return function(array) {
+				var resistance = a; // magic constant
+				var newArr = [];
+				for (var i = 0; i < array.length; i++) {
+					var sum = 0;
+					var divisor = 0;
+					for (var j = 0; j < array.length; j++) {
+						var dist = Math.abs(i - j);
+						var weight = 1 / Math.pow(2, dist);
+						if (weight == 1) weight = resistance;
+						sum += array[j] * weight;
+						divisor += weight;
+					}
+					newArr[i] = sum / divisor;
+				}
+				return newArr;
+			}
+		}(e);
+	});
+	gui.add(opt, 'experimental').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'exponential').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'tail').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'smooth').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'average').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'normalize').onFinishChange(function(e) {
+		updateTransform()
+	});
 	if (getParameterByName("url")) {
 		playSoundCloud(getParameterByName("url"), "Electro House");
 	}
+	$('.dg').css({
+		zIndex: 10000
+	})
 });
+
+function updateTransform() {
+	window.getTransformedSpectrum = function(values) {
+		return function(array) {
+			var newArr = array;
+			if (values.normalize) newArr = normalizeAmplitude(newArr);
+			if (values.average) newArr = averageTransform(newArr);
+			if (values.tail) newArr = tailTransform(newArr);
+			if (values.smooth) newArr = smooth(newArr);
+			if (values.exponential) newArr = exponentialTransform(newArr);
+			if (values.experimental) newArr = experimentalTransform(newArr);
+			return newArr;
+		}
+	}(opt);
+}

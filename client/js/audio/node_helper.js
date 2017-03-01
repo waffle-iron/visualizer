@@ -5,13 +5,23 @@ var audioBuffer;
 var bufferSource;
 var dispBufferSource;
 var analyzer;
+var biquadFilter;
 var dispScriptProcessor;
 var scriptProcessor;
 
 function setupAudioNodes() {
 	bufferSource = context.createBufferSource();
 	setOnEnded();
+
+
 	bufferSource.connect(context.destination);
+
+	// biquadFilter = context.createBiquadFilter();
+	// bufferSource.connect(biquadFilter);
+	// biquadFilter.type = "lowshelf";
+	// biquadFilter.frequency.value = 1000;
+	// biquadFilter.gain.value = 25;
+	// biquadFilter.connect(context.destination);
 
 	muteGainNode = context.createGain();
 	muteGainNode.gain.value = -1;
@@ -24,7 +34,6 @@ function setupAudioNodes() {
 	if (vol != null) {
 		gainNode.gain.value = vol;
 	}
-
 	delayNode = context.createDelay(1);
 	delayNode.delayTime.value = audioDelay;
 	bufferSource.connect(gainNode);
@@ -36,6 +45,8 @@ function setupAudioNodes() {
 	scriptProcessor.connect(context.destination);
 
 	analyzer = context.createAnalyser();
+
+
 	analyzer.connect(scriptProcessor);
 	analyzer.smoothingTimeConstant = temporalSmoothing;
 	analyzer.minDecibels = -100;
@@ -48,7 +59,9 @@ function setupAudioNodes() {
 		console.log('Using fftSize of ' + analyzer.fftSize);
 		alert('Could not set optimal fftSize! This may look a bit weird...');
 	}
+
 	bufferSource.connect(analyzer);
+
 }
 
 function playSound(buffer) {
