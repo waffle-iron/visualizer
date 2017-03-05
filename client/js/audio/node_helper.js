@@ -17,7 +17,6 @@ function setupAudioNodes() {
 	bufferSource.connect(context.destination);
 
 	// biquadFilter = context.createBiquadFilter();
-	// bufferSource.connect(biquadFilter);
 	// biquadFilter.type = "lowshelf";
 	// biquadFilter.frequency.value = 1000;
 	// biquadFilter.gain.value = 25;
@@ -45,7 +44,6 @@ function setupAudioNodes() {
 	scriptProcessor.connect(context.destination);
 
 	analyzer = context.createAnalyser();
-
 
 	analyzer.connect(scriptProcessor);
 	analyzer.smoothingTimeConstant = temporalSmoothing;

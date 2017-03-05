@@ -5,7 +5,13 @@ var opt = {
 	normalize: true,
 	tail: true,
 	average: true,
-	smooth: true
+	smooth: true,
+	peak: false,
+	ms: false,
+	pow: false,
+	spike: false,
+	i: 10,
+	j: 20
 }
 
 // mostly for debugging purposes
@@ -55,14 +61,35 @@ function transformToVisualBins(array) {
 	return newArray;
 }
 
-function getTransformedSpectrum(array) {
+/*function getTransformedSpectrum(array) {
 	var newArr = normalizeAmplitude(array);
 	newArr = averageTransform(newArr);
 	newArr = tailTransform(newArr);
 	newArr = smooth(newArr);
 	newArr = exponentialTransform(newArr);
 	return newArr;
+}*/
+
+
+function getTransformedSpectrum(array) {
+	var newArr = array;
+	newArr = normalizeAmplitude(newArr);
+	newArr = averageTransform(newArr);
+	newArr = tailTransform(newArr);
+	//smooth
+	newArr = exponentialTransform(newArr);
+
+	newArr = powTransform(newArr);
+	newArr = smooth(newArr);
+
+
+	newArr = experimentalTransform(newArr);
+
+	newArr = normalizeAmplitude(newArr);
+	handlePad(newArr);
+	return newArr;
 }
+
 
 function normalizeAmplitude(array) {
 	var values = [];
@@ -187,4 +214,91 @@ function experimentalTransform(array) {
 		newArr[i] = sum / divisor;
 	}
 	return newArr;
+}
+
+function peak1(A, c, d) {
+	var m = Math.floor((c + d) / 2);
+	if (A[m - 1] <= A[m] && A[m] >= A[m + 1]) {
+		return m;
+	} else if (A[m - 1] > A[m]) {
+		return peak1(A, c, m - 1);
+	} else if (A[m] < A[m + 1]) {
+		return peak1(A, m + 1, d);
+	}
+}
+
+function doPeak(array) {
+	var newArr = [];
+	for (var i in array) {
+		newArr[i] = peak1(array, opt.i, opt.j);
+	}
+	return newArr;
+}
+
+function ms(array) {
+	var newArr = [];
+	var m = math.mean(array);
+	var s = math.std(array);
+	for (var i in array) {
+		if (array[i] - m > 2 * s) {
+			newArr[i] = array[i];
+		} else {
+			newArr[i] = array[i] / 2;
+		}
+	}
+	return newArr;
+}
+
+function powTransform(array) {
+	var newArr = array.map(v => {
+		return Math.pow(v = v / 255, 1 - v) * 255
+	});
+
+	return newArr;
+}
+
+function normalize(value, max, min, dmax, dmin) {
+	return (dmax - dmin) / (max - min) * (value - max) + dmax
+}
+
+var base = Math.pow(2, 1 / 3);
+
+function spike(array) {
+	var newArr = []
+	newArr = array.map(v => {
+		var _v = normalize(v, 255, 0, 1, 0);
+		return getValFromX(_v, 30, 0);
+	});
+	return newArr;
+}
+
+function compute(x) {
+	return base ** x;
+}
+
+function getValFromX(x, max, min) {
+	return compute(x * (max - min) + min);
+}
+
+var spiral = [11, 21, 31, 41, 51, 61, 71, 81, 82, 83, 84, 85, 86, 87, 88, 78, 68, 58, 48, 38, 28, 18, 17, 16, 15, 14, 13, 12, 22, 32, 42, 52, 62, 72, 73, 74, 75, 76, 77, 67, 57, 47, 37, 27, 26, 25, 24,
+	23, 33, 43, 53, 63, 64, 65, 66, 56, 46, 36, 35, 34, 44, 54, 55, 45];
+
+
+function clearPad() {
+	for (var i = 0; i < 100; i++) {
+		output.stopNote(i, "all");
+	}
+}
+
+var l = [0, 0, 0, 17, 18, 19, 13, 14, 15, 9, 10, 11, 5, 6, 7]
+
+function handlePad(array) {
+	for (var i = 0; i < 63; i += 2) {
+		var _i = normalize(array[i], 255, 0, l.length - 1, 0);
+		var li = l[Math.floor(_i)];
+		var __i = normalize(li, 127, 0, 1, 0);
+		output.playNote(spiral[Math.floor(i)], "all", {
+			velocity: __i
+		});
+	}
 }

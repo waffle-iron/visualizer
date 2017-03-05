@@ -4,6 +4,9 @@ if (!window.AudioContext) {
 	}
 	window.AudioContext = window.webkitAudioContext;
 }
+var output;
+var input;
+
 
 
 function getParameterByName(name, url) {
@@ -126,57 +129,18 @@ function playSoundCloud(url, genre) {
 				id: 123
 			});
 		}
-
+		// window.history.pushState("Update", "Title", "?url=" + url);
 
 
 		loadSong(s);
-
+		updateStyles();
 		initGui(song);
 		setupAudioNodes()
 		loadSound(track.stream_url + "?client_id=3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc"); // music file
 
 
 		centerContent();
-		// add it to the scene
-		scene.remove(particleSystem);
-		scene.remove(fleckSystem);
-		scene.remove(bokehSystem);
-		pMaterial = new THREE.PointsMaterial({
-			color: 0xFFFFFF,
-			opacity: particleOpacity,
-			size: 5,
-			map: stdTexure,
-			blending: THREE.AdditiveBlending,
-			transparent: true
-		});
 
-		fleckMaterial = new THREE.PointsMaterial({
-			color: color,
-			opacity: particleOpacity,
-			size: 4,
-			map: fleckTexture,
-			blending: THREE.AdditiveBlending,
-			transparent: true
-		});
-
-		bokehMaterial = new THREE.PointsMaterial({
-			color: brighten(color, 2.1),
-			opacity: bokehOpacity,
-			size: 100,
-			map: bokehTexture,
-			blending: THREE.AdditiveBlending,
-			transparent: true
-		});
-		// create the particle systems
-		particleSystem = new THREE.Points(particles, pMaterial);
-		fleckSystem = new THREE.Points(flecks, fleckMaterial);
-		bokehSystem = new THREE.Points(bokeh, bokehMaterial);
-		// add it to the scene
-		scene.add(particleSystem);
-		if (song.getGenre() != 'BTC' && song.getGenre() != 'Mirai Sekai') {
-			scene.add(fleckSystem);
-			scene.add(bokehSystem);
-		}
 	});
 	$('#songinfo').css('padding-top', (blockSize - $('#songinfo').height()) / 2);
 }
@@ -190,6 +154,8 @@ function playUrl(url, data) {
 	var s = new Song(data);
 
 	loadSong(s);
+
+	updateStyles();
 
 	initGui(song);
 	setupAudioNodes()
@@ -244,25 +210,179 @@ $(document).ready(function() {
 	gui.add(opt, 'normalize').onFinishChange(function(e) {
 		updateTransform()
 	});
-	if (getParameterByName("url")) {
-		playSoundCloud(getParameterByName("url"), "Electro House");
+	gui.add(opt, 'peak').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'i').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'j').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'ms').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'pow').onFinishChange(function(e) {
+		updateTransform()
+	});
+	gui.add(opt, 'spike').onFinishChange(function(e) {
+		updateTransform()
+	});
+	var uri = new URI(window.location.href);
+	var q = uri.search(true);
+	switch (q.type) {
+		case 'soundcloud':
+			playSoundCloud(q.url, (q.genre) ? "EDM" : q.genre);
+			break;
+		case 'url':
+			playUrl(q.url, {
+				genre: (q.genre) ? "EDM" : q.genre,
+				title: q.title,
+				artist: q.artist,
+				id: 1
+			});
+			break;
+		default:
+			break;
 	}
 	$('.dg').css({
 		zIndex: 10000
 	})
+
+
+	WebMidi.enable(function(err) {
+
+		if (err) {
+			console.log("WebMidi could not be enabled.", err);
+		} else {
+			console.log("WebMidi enabled!");
+			output = WebMidi.getOutputByName("Launchpad Pro Standalone Port");
+			input = WebMidi.getInputByName("Launchpad Pro Standalone Port");
+			input.on("noteon", "all", function(e) {
+				if (e.note.number == 81) {
+					if (started) {
+						if (isPlaying) {
+							delayNode.delayTime.value = 0;
+							bufferSource.stop();
+							currentTime += Date.now() - started;
+							velMult = 0;
+						} else {
+							var newSource = context.createBufferSource();
+							newSource.buffer = bufferSource.buffer;
+							bufferSource = newSource;
+							setOnEnded();
+							bufferSource.connect(analyzer);
+							bufferSource.connect(muteGainNode);
+							bufferSource.connect(gainNode);
+							delayNode.delayTime.value = audioDelay;
+							bufferSource.connect(delayNode);
+							bufferSource.connect(context.destination);
+							bufferSource.start(0, currentTime / 1000);
+							started = Date.now();
+						}
+						isPlaying = !isPlaying;
+					}
+				}
+				clearPad();
+			})
+		}
+
+	});
+
+
 });
 
 function updateTransform() {
+	/*window.getTransformedSpectrum = function(values) {
+		return function(array) {
+			var newArr = array;
+			if (values.normalize) newArr = normalizeAmplitude(newArr);
+			if (values.average) newArr = averageTransform(newArr);
+			if (values.tail) newArr = tailTransform(newArr);
+			//smooth
+			if (values.smooth) newArr = smooth(newArr);
+			if (values.exponential) newArr = exponentialTransform(newArr);
+			if (values.ms) newArr = ms(newArr);
+
+			if (values.experimental) newArr = experimentalTransform(newArr);
+			if (values.pow) newArr = powTransform(newArr);
+
+			if (values.spike) newArr = spike(newArr);
+			if (values.normalize) newArr = normalizeAmplitude(newArr);
+			if (values.peak) newArr = doPeak(newArr);
+
+			return newArr;
+		}
+	}(opt);*/
+
+
 	window.getTransformedSpectrum = function(values) {
 		return function(array) {
 			var newArr = array;
 			if (values.normalize) newArr = normalizeAmplitude(newArr);
 			if (values.average) newArr = averageTransform(newArr);
 			if (values.tail) newArr = tailTransform(newArr);
-			if (values.smooth) newArr = smooth(newArr);
+			//smooth
 			if (values.exponential) newArr = exponentialTransform(newArr);
+
+			if (values.pow) newArr = powTransform(newArr);
+			if (values.smooth) newArr = smooth(newArr);
+			if (values.ms) newArr = ms(newArr);
+
 			if (values.experimental) newArr = experimentalTransform(newArr);
+
+
+			if (values.spike) newArr = spike(newArr);
+
+			if (values.normalize) newArr = normalizeAmplitude(newArr);
+			if (values.peak) newArr = doPeak(newArr);
+			handlePad(newArr);
 			return newArr;
 		}
 	}(opt);
+
+}
+
+function updateStyles() {
+
+	// add it to the scene
+	scene.remove(particleSystem);
+	scene.remove(fleckSystem);
+	scene.remove(bokehSystem);
+	pMaterial = new THREE.PointsMaterial({
+		color: 0xFFFFFF,
+		opacity: particleOpacity,
+		size: 5,
+		map: stdTexure,
+		blending: THREE.AdditiveBlending,
+		transparent: true
+	});
+
+	fleckMaterial = new THREE.PointsMaterial({
+		color: color,
+		opacity: particleOpacity,
+		size: 4,
+		map: fleckTexture,
+		blending: THREE.AdditiveBlending,
+		transparent: true
+	});
+
+	bokehMaterial = new THREE.PointsMaterial({
+		color: brighten(color, 2.1),
+		opacity: bokehOpacity,
+		size: 100,
+		map: bokehTexture,
+		blending: THREE.AdditiveBlending,
+		transparent: true
+	});
+	// create the particle systems
+	particleSystem = new THREE.Points(particles, pMaterial);
+	fleckSystem = new THREE.Points(flecks, fleckMaterial);
+	bokehSystem = new THREE.Points(bokeh, bokehMaterial);
+	// add it to the scene
+	scene.add(particleSystem);
+	if (song.getGenre() != 'BTC' && song.getGenre() != 'Mirai Sekai') {
+		scene.add(fleckSystem);
+		scene.add(bokehSystem);
+	}
 }
