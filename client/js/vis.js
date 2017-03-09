@@ -6,6 +6,7 @@ if (!window.AudioContext) {
 }
 var output;
 var input;
+var midi = false;
 
 
 
@@ -251,9 +252,9 @@ $(document).ready(function() {
 
 
 	WebMidi.enable(function(err) {
-
 		if (err) {
 			console.log("WebMidi could not be enabled.", err);
+
 		} else {
 			console.log("WebMidi enabled!");
 			output = WebMidi.getOutputByName("Launchpad Pro Standalone Port");
@@ -336,7 +337,7 @@ function updateTransform() {
 
 			if (values.normalize) newArr = normalizeAmplitude(newArr);
 			if (values.peak) newArr = doPeak(newArr);
-			handlePad(newArr);
+			if (midi) handlePad(newArr);
 			return newArr;
 		}
 	}(opt);

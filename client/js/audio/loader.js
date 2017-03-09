@@ -1,6 +1,11 @@
 var song;
 
 function loadSong(data) {
+	song = data;
+	initGui(song);
+}
+
+/*function loadSong(data) {
 	var songs = [];
 	var count = 0;
 	prefix = window.location.href.split('/')[0] + '//' + window.location.host +
@@ -64,4 +69,4 @@ function loadSong(data) {
 		song = data;
 	}
 	initGui(song);
-}
+}*/

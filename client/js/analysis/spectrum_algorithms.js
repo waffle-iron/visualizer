@@ -86,7 +86,7 @@ function getTransformedSpectrum(array) {
 	newArr = experimentalTransform(newArr);
 
 	newArr = normalizeAmplitude(newArr);
-	handlePad(newArr);
+	if (midi) handlePad(newArr);
 	return newArr;
 }
 
@@ -250,7 +250,7 @@ function ms(array) {
 }
 
 function powTransform(array) {
-	var newArr = array.map(v => {
+	var newArr = array.map(function(v) {
 		return Math.pow(v = v / 255, 1 - v) * 255
 	});
 
@@ -265,7 +265,7 @@ var base = Math.pow(2, 1 / 3);
 
 function spike(array) {
 	var newArr = []
-	newArr = array.map(v => {
+	newArr = array.map(function(v) {
 		var _v = normalize(v, 255, 0, 1, 0);
 		return getValFromX(_v, 30, 0);
 	});
@@ -273,7 +273,7 @@ function spike(array) {
 }
 
 function compute(x) {
-	return base ** x;
+	return Math.pow(base, x);
 }
 
 function getValFromX(x, max, min) {
@@ -292,13 +292,44 @@ function clearPad() {
 
 var l = [0, 0, 0, 17, 18, 19, 13, 14, 15, 9, 10, 11, 5, 6, 7]
 
+
 function handlePad(array) {
-	for (var i = 0; i < 63; i += 2) {
-		var _i = normalize(array[i], 255, 0, l.length - 1, 0);
+	for (var i = 0; i < 63; i += 9) {
+		var avg = math.max(Array.from(array.slice(i, i + 9)))
+		var _i = normalize(avg, 255, 0, l.length - 1, 0);
 		var li = l[Math.floor(_i)];
 		var __i = normalize(li, 127, 0, 1, 0);
-		output.playNote(spiral[Math.floor(i)], "all", {
-			velocity: __i
-		});
+		for (var j = 0; j < 8; j++) {
+			output.playNote(Math.floor(normalize(i, 63, 0, 18, 11)) + (j * 10), "all", {
+				velocity: __i
+			});
+		}
 	}
 }
+
+// function handlePad(array) {
+// 	for (var i = 0; i < 63; i += 2) {
+// 		var _i = normalize(array[i], 255, 0, l.length - 1, 0);
+// 		var li = l[Math.floor(_i)];
+// 		var __i = normalize(li, 127, 0, 1, 0);
+// 		output.playNote(spiral[Math.floor(i)], "all", {
+// 			velocity: __i
+// 		});
+// 	}
+// }
+
+// function handlePad(array) {
+// 	for (var i = 0; i < 63; i += 6) {
+// 		var avg = math.mean(Array.from(array.slice(i, i + 6)));
+// 		var _i = normalize(avg, 255, 0, l.length - 1, 0);
+// 		var li = l[Math.floor(_i)];
+// 		var velColor = normalize(li, 127, 0, 1, 0);
+// 		var a = normalize(avg, 255, 0, 8, 1);
+// 		var n = normalize(i, 63, 0, 8, 1);
+//
+// 		output.playNote(parseInt(new String(Math.floor(n)) + new String(Math.floor(a)), 10), "all", {
+// 			velocity: velColor
+// 		});
+// 	}
+//
+// }
