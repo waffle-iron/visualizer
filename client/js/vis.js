@@ -229,6 +229,9 @@ $(document).ready(function() {
 	gui.add(opt, 'spike').onFinishChange(function(e) {
 		updateTransform()
 	});
+	gui.add(opt, 'allMax').onFinishChange(function(e) {
+		updateTransform()
+	});
 	var uri = new URI(window.location.href);
 	var q = uri.search(true);
 	switch (q.type) {
@@ -337,6 +340,7 @@ function updateTransform() {
 
 			if (values.normalize) newArr = normalizeAmplitude(newArr);
 			if (values.peak) newArr = doPeak(newArr);
+			if (values.allMax) newArr = allMax(newArr);
 			if (midi) handlePad(newArr);
 			return newArr;
 		}

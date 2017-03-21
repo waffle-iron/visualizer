@@ -1,17 +1,18 @@
 var opt = {
 	resistance: 3,
-	experimental: false,
+	experimental: true,
 	exponential: true,
 	normalize: true,
 	tail: true,
 	average: true,
-	smooth: true,
+	smooth: false,
 	peak: false,
 	ms: false,
-	pow: false,
+	pow: true,
 	spike: false,
 	i: 10,
-	j: 20
+	j: 20,
+	allMax: true
 }
 
 // mostly for debugging purposes
@@ -305,6 +306,14 @@ function handlePad(array) {
 			});
 		}
 	}
+}
+
+function allMax(array) {
+	var newArr = array.map(v => {
+		return math.max(array);
+
+	});
+	return newArr;
 }
 
 // function handlePad(array) {
