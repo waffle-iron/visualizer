@@ -250,9 +250,18 @@ function ms(array) {
 	return newArr;
 }
 
-function powTransform(array) {
+/*function powTransform(array) {
 	var newArr = array.map(function(v) {
 		return Math.pow(v = v / 255, 1 - v) * 255
+	});
+
+	return newArr;
+}*/
+
+function powTransform(array) {
+	var newArr = array.map(function(v) {
+var dv = v/255
+		return Math.pow(dv, (1-dv)*normalize(v,math.max(array),0,1,2)) * 255
 	});
 
 	return newArr;
