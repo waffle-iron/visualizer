@@ -6,6 +6,11 @@ var GainNode = Context.createGain();
 var AudioNode = Context.createScriptProcessor(BufferInterval, 1, 1)
 var delayNode = Context.createDelay(1);
 
+SC.initialize({
+    client_id: '3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc',
+    redirect_uri: 'music.marisusis.me/auth'
+  });
+
 var ArtistText = document.getElementById("Artist")
 var SongNameText = document.getElementById("SongName")
 var Title = document.getElementById("Title")
@@ -430,6 +435,9 @@ function addToQueue(song) {
 }
 
 function playSong(song) {
+if (Playing) {
+		forceStop();
+}
 	Songs = [song];
 	SongSpot++
 	if (SongSpot > Songs.length - 1) {
@@ -524,4 +532,19 @@ function playSong(song) {
 	TextCycles = []
 	LoadSound(FileName, ArtistLogo, Album)
 	CreateNewFleck()
+}
+
+function playSoundcloud(url) {
+	SC.resolve(url).then(function(track) {
+		var title = track.title;
+		var artworkURL = track.artwork_url;
+		var artist = track.user.username
+		var stream = track.stream_url + "?client_id=3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc";
+		if (Playing) {
+			addToQueue([artist,title,"Electro",stream,artworkURL,"4usingle"])
+		} else {
+			playSong([artist,title,"Electro",stream,artworkURL,"4usingle"]);
+		}
+		console.log(track);
+	});
 }

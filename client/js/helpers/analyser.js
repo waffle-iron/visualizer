@@ -11,6 +11,8 @@ var SpectrumStart = 4
 var SpectrumEnd = 1200
 var SpectrumLogScale = 2.55
 
+spectrumSize = 63
+
 var resRatio = (window.innerWidth / window.innerHeight)
 var spectrumWidth = 1568 * resRatio;
 spectrumSpacing = 7 * resRatio;
@@ -261,10 +263,19 @@ function experimentalTransform(array) {
 	return newArr;
 }
 
+// function powTransform(array) {
+// 	var newArr = array.map(function(v) {
+// 		var dv = v / 255
+// 		return Math.pow(dv, (1 - dv) * normalize(v, math.max(array), 0, 1, 2)) * 255
+// 	});
+//
+// 	return newArr;
+// }
+
 function powTransform(array) {
 	var newArr = array.map(function(v) {
 		var dv = v / 255
-		return Math.pow(dv, (1 - dv) * normalize(v, math.max(array), 0, 1, 2)) * 255
+		return Math.pow(dv, (1 - dv) * normalize(math.mean(array), math.max(array), 0, 1, 3)) * 255
 	});
 
 	return newArr;
