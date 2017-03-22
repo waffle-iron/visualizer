@@ -81,7 +81,6 @@ function getTransformedSpectrum(array) {
 	newArr = exponentialTransform(newArr);
 
 	newArr = powTransform(newArr);
-	newArr = smooth(newArr);
 
 
 	newArr = experimentalTransform(newArr);
@@ -260,8 +259,8 @@ function ms(array) {
 
 function powTransform(array) {
 	var newArr = array.map(function(v) {
-var dv = v/255
-		return Math.pow(dv, (1-dv)*normalize(v,math.max(array),0,1,2)) * 255
+		var dv = v / 255
+		return Math.pow(dv, (1 - dv) * normalize(v, math.max(array), 0, 1, 2)) * 255
 	});
 
 	return newArr;
