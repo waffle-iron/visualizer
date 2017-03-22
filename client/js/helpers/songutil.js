@@ -19,7 +19,7 @@ var StartTime = 0
 var TimeLength = 0
 var Playing = false
 
-var Songs = []
+var Songs = [];
 var AlbumRotations = []
 var NextAlbumRotation = 0
 var TextCycles = []
@@ -53,7 +53,7 @@ var BaseEnvironments = []
 
 var DefaultTextColor = "#FFFFFF"
 
-
+var begun = false;
 
 function Preload(ImageUrl) {
 	var Img = new Image();
@@ -402,7 +402,8 @@ function CreateSourceBuffer(ExistingBuffer) {
 
 	Source.onended = function() {
 		if (Paused == false) {
-			ForceStop()
+			stop()
+			playSong(Songs[SongSpot]);
 		}
 	}
 	InitializeSpectrumHandler();
@@ -410,7 +411,7 @@ function CreateSourceBuffer(ExistingBuffer) {
 }
 
 function InitializeSpectrumHandler() {
-	SongOrder = GetRandomTableOfNumbers(Songs.length)
+	Songs = new Array();
 	AudioNode.onaudioprocess = HandleAudio
 	Analyser.fftSize = FFTSize
 	Analyser.smoothingTimeConstant = 0
@@ -426,19 +427,18 @@ function InitializeSpectrumHandler() {
 
 function addToQueue(song) {
 	Songs.push(song);
-	var NextSongSpot = SongSpot + 1
-	if (NextSongSpot > Songs.length - 1) {
-		NextSongSpot = 0
-	}
-	var NextSongData = Songs[Songs.length - 1];
-	GetAudioSource(NextSongData[3], function() {})
+	// var NextSongSpot = SongSpot + 1
+	// if (NextSongSpot > Songs.length - 1) {
+	// 	NextSongSpot = 0
+	// }
+	// var NextSongData = Songs[Songs.length - 1];
+	// GetAudioSource(NextSongData[3], function() {})
 }
 
-function playSong(song) {
-if (Playing) {
-		forceStop();
-}
-	Songs = [song];
+function playSong() {
+	begun = true;
+
+
 	SongSpot++
 	if (SongSpot > Songs.length - 1) {
 		SongSpot = 0
@@ -540,11 +540,15 @@ function playSoundcloud(url) {
 		var artworkURL = track.artwork_url;
 		var artist = track.user.username
 		var stream = track.stream_url + "?client_id=3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc";
-		if (Playing) {
-			addToQueue([artist,title,"Electro",stream,artworkURL,"4usingle"])
-		} else {
-			playSong([artist,title,"Electro",stream,artworkURL,"4usingle"]);
-		}
+		addToQueue([artist,title,"Electro",stream,artworkURL,"4usingle"])
+		playSong();
+		// if (!begun) {
+		//  playSong();
+		// 	} else if (!Stopped) {
+		//
+		// } else {
+		// 	playSong();
+		// }
 		console.log(track);
 	});
 }
