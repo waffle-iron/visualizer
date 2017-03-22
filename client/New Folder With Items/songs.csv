@@ -1,5 +1,0 @@
-# key|artist|title|genreColor|soundCloudId
-# The last parameter should be the song's URL. If it does not start with 'http', it will be parsed as a YouTube ID.
-# Newlines are denoted with <br>
-# Prefixing a character with ^ will force it to be lowercase
-matter|Ark Patrol|The Meaning Doesn't Matter|Trance|294378882
