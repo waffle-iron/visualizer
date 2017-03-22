@@ -1,80 +1,69 @@
-<!DOCTYPE html>
+<!--Look at averageTransform to see if it can be improved-->
+<!DOCTYPE HTML>
 <html>
-    <head>
-        <meta charset="UTF-8">
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.min.js"></script>
-        <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.js"></script>
-        <link rel="icon" type="image/x-icon" href="./favicon.ico">
-        <link rel="stylesheet" href="./vis.css">
-        <link href='https://fonts.googleapis.com/css?family=Raleway:300,700' rel='stylesheet' type='text/css'>
-    </head>
-    <body>
-        <div id="vig"></div>
-        <div class="content">
-            <canvas id="canvas" style="display: block;"></canvas>
-            <div id="songinfo" class="front">
-                <div id="artist" class="front"></div>
-                <div id="title" class="front"></div>
-            </div>
-            <div id="AlbumTextDiv" class="TextDiv2">
-              <p id="AlbumTitle" class="AlbumTitle">Test for now</p>
-              <p id="AlbumSongTitle1" class="AlbumSongTitle1">Test for now</p>
-              <p id="AlbumSongTitle2" class="AlbumSongTitle2">Test for now</p>
-              <p id="AlbumSongTitle3" class="AlbumSongTitle3">Test for now</p>
-            </div>
-            <div class="ayylmao"></div>
-            <div id="cover">
-                <div><img src="/img/mcat.svg" class="mcat"></div>
-            </div>
-            <div id="spectrum_preloader"><div></div></div>
-        </div>
+<head>
+  <title id="Title">
+    Loading...
+  </title>
+  <!--WebGL is stored locally to work with file:// with no internet. To undo, switch the comments.-->
+  <!--<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r77/three.min.js"></script>-->
+  <script type="text/javascript" src="js/webgl/webgl.js"></script>
+  <script type="text/javascript" src="js/math.min.js"></script>
+  <link rel="stylesheet" href="./pagestyle.css">
+  <link rel="shortcut icon" type="image/png" href="img/favicon.ico">
+</head>
+<body id="Body" bgcolor=#000000>
+  <div class="ImageClip">
+    <img id="BackgroundImage" class="BackgroundImage"></img>
+  </div>
+  <div id="ColorBackground" class="ColorBackground"></div>
+  <div id="ParticleBackground" class="ParticleBackground"></div>
+  <div id="MainDiv" class="MainDiv" height="0px" width="0px">
+    <canvas id="MainCanvas"></canvas>
+    </canvas>
+    <img id="AlbumImage" class="AlbumImage" src="img/blankpixel.png"></img>
+    <img id="MonstercatLogo" src="img/monstercatlogo.png"></img>
+    <div id="TextDiv" class="TextDiv1">
+      <p id="Artist" class="ArtistName">Artist Name</p>
+      <p id="SongName" class="SongName">Song Name</p>
+    </div>
+    <div id="AlbumTextDiv" class="TextDiv2">
+      <p id="AlbumTitle" class="AlbumTitle">Test for now</p>
+      <p id="AlbumSongTitle1" class="AlbumSongTitle1">Test for now</p>
+      <p id="AlbumSongTitle2" class="AlbumSongTitle2">Test for now</p>
+      <p id="AlbumSongTitle3" class="AlbumSongTitle3">Test for now</p>
+    </div>
+  </div>
+  <div id="LoadingDiv" class="LoadingDiv">
+    <p id="LoadingText" class="LoadingText"></p>
+  </div>
+  <div id="LowerTextDiv" class="LowerTextDiv">
+    <p id="LeftText" class="LeftText">&nbsp;Press P to Pause<br>&nbsp;Export Data (E): No<br>&nbsp;Volume (Arrow Keys): 100%</p>
+    <p id="RightText" class="RightText"><a id="Link1" href="https://github.com/TheNexusAvenger/Monstercat-Audio-Spectrum-Visualizer/" target="_blank">GitHub&nbsp;</a><br><a id="Link2" href="https://www.roblox.com/games/435042236/Monstercat-Style-Audio-Spectrum-Visualizer" target="_blank">ROBLOX Place&nbsp;</a></p>
+  </div>
+  <script type="text/javascript" src="js/helpers/config.js"></script>
 
-        <div class="partsbg"></div>
-        <div style="" class="mvbg"></div>
+  <script type="text/javascript" src="js/helpers/colors.js"></script>
+  <script type="text/javascript" src="js/helpers/songutil.js"></script>
+  <script type="text/javascript" src="js/helpers/albumcovers.js"></script>
+  <script type="text/javascript" src="js/helpers/download.js"></script>
+  <script type="text/javascript" src="js/helpers/analyser.js"></script>
+  <script type="text/javascript" src="js/helpers/urlsearch.js"></script>
 
-        <div id="volume-info" class="front">Volume: <span id="volume-value"></span></div>
-		<div id="loading-info" class="front">Now Loading<br><span id="loading-value"></span></div>
-        <div id="pause-info" class="hide front">Press P to Pause</div>
-        <div id="github" class="hide front"><a href="https://github.com/caseif/vis.js" target="_blank">GitHub</a></div>
+  <script type="text/javascript" src="js/songdata/songs.js"></script>
+  <script type="text/javascript" src="js/songdata/albums.js"></script>
+  <script type="text/javascript" src="js/songdata/backgrounds.js"></script>
+  <script type="text/javascript" src="js/songdata/lpsongnames.js"></script>
 
-        <!-- Config script -->
-        <script type="text/javascript" src="./js/util/config.js"></script>
+  <script type="text/javascript" src="js/main/input.js"></script>
 
-        <!-- Utility scripts -->
-        <script type="text/javascript" src="./js/util/helper/net/async_helper.js"></script>
-        <script type="text/javascript" src="./js/util/helper/net/cookie_helper.js"></script>
-        <script type="text/javascript" src="./js/util/helper/net/url_helper.js"></script>
-        <script type="text/javascript" src="./js/util/helper/color_helper.js"></script>
-        <script type="text/javascript" src="./js/util/helper/genre_helper.js"></script>
-        <script type="text/javascript" src="./js/util/helper/misc_helper.js"></script>
-        <script type="text/javascript" src="./js/util/helper/random_helper.js"></script>
+  <!--WebGL scripts from https://github.com/caseif/vis.js/tree/gh-pages/js/visual/gl-->
+  <script type="text/javascript" src="js/webgl/geom_util.js"></script>
+  <script type="text/javascript" src="js/webgl/scene.js"></script>
+  <script type="text/javascript" src="js/webgl/geometry.js"></script>
+  <script type="text/javascript" src="js/webgl/light.js"></script>
+  <script type="text/javascript" src="js/webgl/render.js"></script>
 
-        <!-- Abstract models -->
-        <script type="text/javascript" src="./js/model/song.js"></script>
-
-        <!-- Algorithmic spectrum analysis/transformation scripts -->
-        <script type="text/javascript" src="./js/analysis/spectrum_algorithms.js"></script>
-
-        <!-- User IO scripts -->
-        <script type="text/javascript" src="./js/io/keyhandler.js"></script>
-        <script type="text/javascript" src="./js/io/volume.js"></script>
-
-        <!-- Visual/GUI scripts -->
-        <script type="text/javascript" src="./js/visual/gui.js"></script>
-        <script type="text/javascript" src="./js/visual/spectrum.js"></script>
-
-        <!-- AudioNode scripts -->
-        <script type="text/javascript" src="./js/audio/node_helper.js"></script>
-        <script type="text/javascript" src="./js/audio/loader.js"></script>
-
-        <!-- Main script -->
-        <script type="text/javascript" src="./js/vis.js"></script>
-
-        <!-- WebGL scripts -->
-        <script type="text/javascript" src="./js/visual/gl/geom_util.js"></script>
-        <script type="text/javascript" src="./js/visual/gl/scene.js"></script>
-        <script type="text/javascript" src="./js/visual/gl/geometry.js"></script>
-        <script type="text/javascript" src="./js/visual/gl/light.js"></script>
-        <script type="text/javascript" src="./js/visual/gl/render.js"></script>
-    </body>
+  <script type="text/javascript" src="js/main/spectrum.js"></script>
+</body>
 </html>

@@ -1,0 +1,72 @@
+doctype html
+html
+  head
+    meta(charset='UTF-8')
+    script(type='text/javascript', src='/js/lib/jquery.min.js')
+    script(type='text/javascript', src='/js/lib/three.js')
+    script(type='text/javascript', src='/js/lib/soundcloud.js')
+    script(type='text/javascript', src='/js/util/tools.js')
+    script(type='text/javascript', src='/js/lib/stats.min.js')
+    script(type='text/javascript', src='/js/lib/dat.gui.min.js')
+    script(type='text/javascript', src='/js/lib/math.min.js')
+    script(type='text/javascript', src='/js/lib/URI.min.js')
+    script(src='https://cdn.rawgit.com/cotejp/webmidi/a5adf36e/webmidi.min.js')
+    link(rel='icon', type='image/x-icon', href='/img/favicon.ico')
+    link(rel='stylesheet', href='./vis.css')
+    link(href='https://fonts.googleapis.com/css?family=Raleway:300,700', rel='stylesheet', type='text/css')
+  body
+    #vig
+    .content
+      canvas#canvas(style='display: block;')
+      #songinfo.front
+        #artist.front
+        #title.front
+      .ayylmao
+      #cover
+        div
+          img.mcat(src='/img/mcat.svg')
+      #spectrum_preloader
+        div
+    .partsbg
+    .mvbg(style='')
+    #volume-info.front
+      | Volume:
+      span#volume-value
+    #loading-info.front
+      | Now Loading
+      br
+      span#loading-value
+    #pause-info.hide.front Press P to Pause
+    #github.hide.front
+      a(href='https://github.com/caseif/vis.js', target='_blank') GitHub
+    // Config script
+    script(type='text/javascript', src='./js/util/config.js')
+    // Utility scripts
+    script(type='text/javascript', src='./js/util/helper/net/async_helper.js')
+    script(type='text/javascript', src='./js/util/helper/net/cookie_helper.js')
+    script(type='text/javascript', src='./js/util/helper/net/url_helper.js')
+    script(type='text/javascript', src='./js/util/helper/color_helper.js')
+    script(type='text/javascript', src='./js/util/helper/genre_helper.js')
+    script(type='text/javascript', src='./js/util/helper/misc_helper.js')
+    script(type='text/javascript', src='./js/util/helper/random_helper.js')
+    // Abstract models
+    script(type='text/javascript', src='./js/model/song.js')
+    // Algorithmic spectrum analysis/transformation scripts
+    script(type='text/javascript', src='./js/analysis/spectrum_algorithms.js')
+    // User IO scripts
+    script(type='text/javascript', src='./js/io/keyhandler.js')
+    script(type='text/javascript', src='./js/io/volume.js')
+    // Visual/GUI scripts
+    script(type='text/javascript', src='./js/visual/gui.js')
+    script(type='text/javascript', src='./js/visual/spectrum.js')
+    // AudioNode scripts
+    script(type='text/javascript', src='./js/audio/node_helper.js')
+    script(type='text/javascript', src='./js/audio/loader.js')
+    // Main script
+    script(type='text/javascript', src='./js/vis.js')
+    // WebGL scripts
+    script(type='text/javascript', src='./js/visual/gl/geom_util.js')
+    script(type='text/javascript', src='./js/visual/gl/scene.js')
+    script(type='text/javascript', src='./js/visual/gl/geometry.js')
+    script(type='text/javascript', src='./js/visual/gl/light.js')
+    script(type='text/javascript', src='./js/visual/gl/render.js')
