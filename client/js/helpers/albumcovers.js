@@ -12,8 +12,6 @@ function ResetToMonstercatLogo() {
 
 function SetToCover(Image) {
 	AlbumImage.src = Image
-	var thief = new ColorThief();
-	console.log(thief.getColor(AlbumImage));
 	MonstercatLogo.src = "img/blankpixel.png"
 }
 
