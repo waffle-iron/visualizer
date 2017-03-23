@@ -275,7 +275,10 @@ function experimentalTransform(array) {
 function powTransform(array) {
 	var newArr = array.map(function(v) {
 		var dv = v / 255
-		return Math.pow(dv, (1 - dv) * normalize(math.mean(array), math.max(array), 0, 1, 3)) * 255
+		var dynamicMin = normalize(1, math.min(array), v, 0, 1)
+		var dynamicMax = normalize(3, v, math.max(array), 3, 5)
+		var powerFactor = normalize(math.mean(array), math.max(array), 0, 1, 3);
+		return Math.pow(dv, (1 - dv) * powerFactor) * 255
 	});
 
 	return newArr;

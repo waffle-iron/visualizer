@@ -7,9 +7,9 @@ var AudioNode = Context.createScriptProcessor(BufferInterval, 1, 1)
 var delayNode = Context.createDelay(1);
 
 SC.initialize({
-    client_id: '3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc',
-    redirect_uri: 'music.marisusis.me/auth'
-  });
+	client_id: '3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc',
+	redirect_uri: 'music.marisusis.me/auth'
+});
 
 var ArtistText = document.getElementById("Artist")
 var SongNameText = document.getElementById("SongName")
@@ -383,7 +383,7 @@ function stop() {
 function CreateSourceBuffer(ExistingBuffer) {
 	Source = Context.createBufferSource()
 	// Source.connect(GainNode);
-	delayNode.delayTime.value = 0.4;
+	delayNode.delayTime.value = 0.3;
 
 
 	if (ExistingBuffer != null) {
@@ -540,7 +540,7 @@ function playSoundcloud(url) {
 		var artworkURL = track.artwork_url;
 		var artist = track.user.username
 		var stream = track.stream_url + "?client_id=3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc";
-		addToQueue([artist,title,"Electro",stream,artworkURL,"4usingle"])
+		addToQueue([artist, title, "Electro", stream, artworkURL, "4usingle"])
 		playSong();
 		// if (!begun) {
 		//  playSong();
