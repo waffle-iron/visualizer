@@ -87,7 +87,7 @@ function GetAudioSource(Url, Callback) {
 		Request.open("GET", Url, true)
 		Request.responseType = 'arraybuffer'
 
-		Request.onload = () => {
+		Request.onload = function() {
 			Context.decodeAudioData(Request.response, function(Buffer) {
 				CachedAudio[Url] = Buffer
 				var CacheToClear = PushValues(Url)

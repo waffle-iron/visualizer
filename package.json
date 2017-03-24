@@ -35,5 +35,14 @@
     "request": "^2.79.0",
     "socket.io": "^1.7.2",
     "winston": "^2.3.1"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-js-obfuscator": "^1.0.0",
+    "gulp-jsfuck": "^0.2.1",
+    "gulp-obfuscate": "^0.2.9",
+    "gulp-uglify": "^2.1.2",
+    "pump": "^1.0.2"
   }
 }
