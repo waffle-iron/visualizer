@@ -23,8 +23,8 @@ try {
 var app = express();
 
 app.use(function(req, res, next) {
-	res.header("Access-Control-Allow-Origin", "*");
-	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	// res.header("Access-Control-Allow-Origin", "*");
+	// res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
 });
 // set up our express application
@@ -73,7 +73,7 @@ app.use('/', mainRoute);
 
 
 module.exports = function() {
-	app.listen(process.env.PORT || 80, function() {
+	app.listen(process.env.PORT || 8080, function() {
 		console.log("listening on *:8080");
 	});
 }

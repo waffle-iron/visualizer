@@ -288,3 +288,6 @@ function HandleAudio() {
 
 
 InitializeSpectrumHandler()
+if (window.location.hash) {
+	playSoundcloud(window.location.hash.substring(1));
+}
