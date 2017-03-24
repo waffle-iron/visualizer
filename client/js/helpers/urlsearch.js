@@ -2,14 +2,14 @@
 
 function $_GET(param) {
 	var vars = {};
-	window.location.href.replace(location.hash, '' ).replace(
+	window.location.href.replace(location.hash, '').replace(
 		/[?&]+([^=&]+)=?([^&]*)?/gi, // regexp
-		function( m, key, value ) { // callback
+		function(m, key, value) { // callback
 			vars[key] = value !== undefined ? value : '';
 		}
 	);
 
-	if ( param ) {
+	if (param) {
 		return vars[param] ? vars[param] : null;
 	}
 	return vars;
@@ -25,13 +25,17 @@ var WantedArtistName = $_GET("artist")
 var WantedGenreName = $_GET("genre")
 
 if (WantedSongName) {
-  SongNameSearch = decodeURIComponent(WantedSongName.toLowerCase())
+	SongNameSearch = decodeURIComponent(WantedSongName.toLowerCase())
 }
 
 if (WantedArtistName) {
-  ArtistNameSearch = decodeURIComponent(WantedArtistName.toLowerCase())
+	ArtistNameSearch = decodeURIComponent(WantedArtistName.toLowerCase())
 }
 
 if (WantedGenreName) {
-  GenreNameSearch = decodeURIComponent(WantedGenreName.toLowerCase())
+	GenreNameSearch = decodeURIComponent(WantedGenreName.toLowerCase())
+}
+
+if ($_GET("type") == "soundcloud") {
+	playSoundcloud($_GET("url"));
 }
