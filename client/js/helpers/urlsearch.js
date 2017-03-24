@@ -35,7 +35,3 @@ if (WantedArtistName) {
 if (WantedGenreName) {
 	GenreNameSearch = decodeURIComponent(WantedGenreName.toLowerCase())
 }
-
-if ($_GET("type") == "soundcloud") {
-	playSoundcloud($_GET("url"));
-}
