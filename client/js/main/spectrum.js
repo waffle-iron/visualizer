@@ -210,10 +210,13 @@ function HandleAudio() {
 	var NewHeight = Canvas.clientHeight - (ShowBlurSize * 2)
 	var NewWidth = Canvas.clientWidth - (ShowBlurSize * 2)
 
-	var DataArray = new Uint8Array(Analyser.frequencyBinCount)
-	Analyser.getByteFrequencyData(DataArray)
-	var VisualData = GetVisualBins(DataArray)
-	var TransformedVisualData = TransformToVisualBins(VisualData)
+	var DataArray = new Uint8Array(Analyser.frequencyBinCount);
+	var TimeArray = new Uint8Array(Analyser.frequencyBinCount);
+	Analyser.getByteTimeDomainData(TimeArray);
+	Analyser.getByteFrequencyData(DataArray);
+	var VisualData = GetVisualBins(DataArray);
+	var VisualTimeData = GetVisualBins(TimeArray);
+	var TransformedVisualData = TransformToVisualBins(VisualData, TimeArray);
 
 	var NewSeperation = Bar1080pSeperation * Mult
 	var NewBarWidth = Bar1080pWidth * Mult

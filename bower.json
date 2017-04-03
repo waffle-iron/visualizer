@@ -1,0 +1,23 @@
+{
+  "name": "visualizer",
+  "description": "<b>Attention: Due to the fact this is approaching 1 GB, no more music will be added. I may look into getting a domain but it is unlikely.</b>",
+  "main": "index.js",
+  "authors": [
+    "Maris Usis"
+  ],
+  "license": "MIT",
+  "homepage": "https://github.com/spacegeek224/visualizer",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "mathjs": "^3.11.2",
+    "underscore": "^1.8.3"
+  }
+}

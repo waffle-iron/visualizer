@@ -119,11 +119,12 @@ function GetVisualBins(Array) {
 	return NewArray
 }
 
-function TransformToVisualBins(Array) {
+function TransformToVisualBins(Array, TimeArray) {
 	Array = normalizeAmplitude(Array);
 	Array = averageTransform(Array)
 	Array = exponentialTransform(Array)
-	Array = powTransform(Array)
+	// Array = timeDomainTransform(Array, TimeArray);
+	Array = powTransform(Array, TimeArray)
 	Array = experimentalTransform(Array);
 	Array = normalizeAmplitude(Array);
 	return Array;
@@ -272,18 +273,77 @@ function experimentalTransform(array) {
 // 	return newArr;
 // }
 
-function powTransform(array) {
-	var newArr = array.map(function(v) {
+// function powTransform(array, time) {
+//
+// 	var regTime = smallerTime(time);
+// 	var newArr = [];
+// 	for (var i = 0; i < array.length; i++) {
+// 		var v = array[i];
+// 		var t = regTime[i];
+// 		var dv = v / 255
+// 		var nv = normalize(v, math.max(regTime) - math.mean(regTime), 0, 1, 0)
+// 		var powerFactor = normalize(v, math.max(array), math.mean(array), 1, 3);
+// 		newArr.push(Math.pow(dv, (1 - dv) * powerFactor) * 255)
+// 	};
+//
+// 	var newArr2 = [];
+// 	if (math.max(newArr) > 255) {
+// 		newArr2 = newArr.map(function(v) {
+// 			return normalize(v, math.max(newArr), 0, 255, 0);
+// 		})
+// 	}
+//
+// 	return newArr2;
+// }
+
+function powTransform(array, time) {
+	var bass = array.slice(0, 21);
+	var mid = array.slice(22, 42);
+	var treble = array.slice(43, 63);
+	var sections = [bass, mid, treble];
+	var regTime = smallerTime(time);
+	var newTime = smooth(averageTransform(normalizeAmplitude(regTime)));
+	var newArr = [];
+	for (var i = 0; i < array.length; i++) {
+		var section = (i <= 21) ? (i <= 42) ? treble : mid : bass;
+		var v = array[i];
+
+		var t = newTime[i];
+		var ddv = normalize(v, 255, 0, normalize(t, math.max(newTime), 0, 255, 0), 0)
 		var dv = v / 255
-		var powerFactor = normalize(v, math.max(array), math.mean(array), 1, 3);
-		return Math.pow(dv, (1 - dv) * powerFactor) * 255
-	});
+		var powerFactor = normalize(v, math.max(section), math.mean(section), 1, 2);
+		var r = Math.pow(dv, (1 - dv) * powerFactor) * 255
+		newArr[i] = normalize(v, math.max(section), 0, math.max(array), 0)
+	};
+	if (math.max(newArr) >= 255) {
+		return newArr.map(function(v) {
+			return normalize(v, math.max(newArr), 0, 255, 0)
+		});
+	}
+
 
 	return newArr;
 }
 
 function normalize(value, max, min, dmax, dmin) {
 	return (dmax - dmin) / (max - min) * (value - max) + dmax
+}
+
+function timeDomainTransform(array, time) {
+	// var newTime = experimentalTransform(time)
+	var newArr = [];
+	for (var i = 0; i < array.length; i++) {
+		newArr[i] = array[i] * normalize(time[i], 255, 0, 1, 0);
+	}
+	return newArr;
+}
+
+function smallerTime(time) {
+	var newTime = [];
+	for (var i = 0; i < 8192; i += 8192 / 64) {
+		newTime.push(time[i]);
+	}
+	return newTime;
 }
 
 
