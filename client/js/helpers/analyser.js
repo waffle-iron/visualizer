@@ -383,18 +383,57 @@ function experimentalTransform(array) {
 // 	return newArr;
 // }
 
-function powTransform(array, time) {
+// function powTransform(array, time) {
+// 	var regTime = smallerTime(time);
+// 	var newTime = smooth(averageTransform(normalizeAmplitude(regTime)));
+// 	var newArr = [];
+// 	for (var i = 0; i < array.length; i++) {
+// 		var section = [];
+// 		if (0 <= i && i <= 21) {
+// 			section = array.slice(0, 21)
+// 		} else if (22 <= i && i <= 42) {
+// 			section = array.slice(22, 42)
+// 		} else if (43 <= i && i <= 63) {
+// 			section = array.slice(43, 63)
+// 		}
+//
+// 		var v = array[i];
+// 		var t = newTime[i];
+// 		var ddv = normalize(v, 255, 0, normalize(t, math.max(newTime), 0, 255, 0), 0)
+// 		var dv = v / 255
+// 		var powerFactor = normalize(v, math.max(section), math.min(section), 1, 2);
+// 		var pdv = normalize(v, math.max(array), 0, 1, 0);
+// 		var r = Math.pow(dv, (1 - (dv * pdv)) * powerFactor) * 255
+// 		newArr[i] = r
+// 		// 		newArr[i] = section[i%21]||0
+// 	};
+// 	if (math.max(newArr) >= 255) {
+// 		return newArr.map(function(v) {
+// 			return normalize(v, math.max(newArr), math.min(newArr), 255, 0)
+// 		});
+// 	}
+// 	if (math.min(newArr) <= 0) {
+// 		return newArr.map(function(v) {
+// 			return normalize(v, math.max(newArr), math.min(newArr), 255, 1)
+// 		});
+// 	}
+//
+//
+// 	return newArr;
+// }
+
+/*function powTransform(array, time) {
 	var regTime = smallerTime(time);
 	var newTime = smooth(averageTransform(normalizeAmplitude(regTime)));
 	var newArr = [];
 	for (var i = 0; i < array.length; i++) {
 		var section = [];
 		if (0 <= i && i <= 21) {
-			section = array.slice(0, 21)
+			section = array.slice(0, 33) // 0 21
 		} else if (22 <= i && i <= 42) {
-			section = array.slice(22, 42)
+			section = array.slice(10, 44) // 22 42
 		} else if (43 <= i && i <= 63) {
-			section = array.slice(43, 63)
+			section = array.slice(31, 65) // 43 63
 		}
 
 		var v = array[i];
@@ -417,10 +456,97 @@ function powTransform(array, time) {
 			return normalize(v, math.max(newArr), math.min(newArr), 255, 1)
 		});
 	}
+	for (var i = 0; i < array.length; i++) {}
+
+
+	return newArr;
+}*/
+
+/*function powTransform(array, time) {
+	var regTime = smallerTime(time);
+	var newTime = smooth(averageTransform(normalizeAmplitude(regTime)));
+	var newArr = [];
+	for (var i = 0; i < array.length; i++) {
+		var section = [];
+		if (0 <= i && i <= 21) {
+			section = array.slice(0, 33) // 0 21
+		} else if (22 <= i && i <= 42) {
+			section = array.slice(10, 44) // 22 42
+		} else if (43 <= i && i <= 63) {
+			section = array.slice(31, 65) // 43 63
+		}
+
+		var v = array[i];
+		var t = newTime[i];
+		var ddv = normalize(v, 255, 0, normalize(t, math.max(newTime), 0, 255, 0), 0)
+		var dv = v / 255
+		var powerFactor = normalize(v, math.max(section), math.min(section), 2, 3);
+		var pdv = normalize(v, math.max(section), 0, 1, 0);
+		var r = Math.pow(dv, (1 - (dv * pdv)) * powerFactor) * 255
+		newArr[i] = r
+		// 		newArr[i] = section[i%21]||0
+	};
+	if (math.max(newArr) >= 255) {
+		newArr = newArr.map(function(v) {
+			return normalize(v, math.max(newArr), math.min(newArr), 255, 0)
+		});
+	}
+	if (math.min(newArr) <= 0) {
+		newArr = newArr.map(function(v) {
+			return normalize(v, math.max(newArr), math.min(newArr), 255, 1)
+		});
+	}
+	for (var i = 0; i < array.length; i++) {
+		//newArr[i] = Math.abs(newArr[i]-array[i])
+		//newArr[i] = normalize(newArr[i], 0, 255, 255, 0)
+	}
+
+
+	return newArr;
+}*/
+
+function powTransform(array, time) {
+	var regTime = smallerTime(time);
+	var newTime = smooth(averageTransform(normalizeAmplitude(regTime)));
+	var newArr = [];
+	for (var i = 0; i < array.length; i++) {
+		var section = [];
+		if (0 <= i && i <= 21) {
+			section = array.slice(0, 33) // 0 21
+		} else if (22 <= i && i <= 42) {
+			section = array.slice(10, 44) // 22 42
+		} else if (43 <= i && i <= 63) {
+			section = array.slice(31, 65) // 43 63
+		}
+
+		var v = array[i];
+		var t = newTime[i];
+		var ddv = normalize(v, 255, 0, normalize(t, math.max(newTime), 0, 255, 0), 0)
+		var dv = v / 255
+		var powerFactor = normalize(v, math.max(section), math.min(section), 1, 2);
+		var pdv = normalize(v, math.max(section), 0, 1, 0);
+		var r = Math.pow(dv, (1 - (dv * pdv)) * powerFactor) * 255
+		newArr[i] = r
+		// 		newArr[i] = section[i%21]||0
+	};
+	if (math.max(newArr) >= 255) {
+		newArr = newArr.map(function(v) {
+			return normalize(v, math.max(newArr), math.min(newArr), 255, 0)
+		});
+	}
+	if (math.min(newArr) <= 0) {
+		newArr = newArr.map(function(v) {
+			return normalize(v, math.max(newArr), math.min(newArr), 255, 1)
+		});
+	}
+	for (var i = 0; i < array.length; i++) {
+		// newArr[i] = normalize(newArr[i],0,255,255,0)
+	}
 
 
 	return newArr;
 }
+
 
 
 

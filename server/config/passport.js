@@ -119,19 +119,5 @@ module.exports = function(passport) {
 			});
 
 		}));
-	passport.use(new SoundCloudStrategy({
-			clientID: sc.id,
-			clientSecret: sc.secret,
-			callbackURL: "http://music.marisusis.me/auth"
-		},
-		function(accessToken, refreshToken, profile, done) {
-			console.log("sc");
-			User.findOrCreate({
-				'soundcloud.id': profile.id
-			}, function(err, user) {
-				return done(err, user);
-			});
-		}
-	));
 
 };
