@@ -119,15 +119,18 @@ function GetVisualBins(Array) {
 	return NewArray
 }
 
-function TransformToVisualBins(Array, TimeArray) {
-	Array = normalizeAmplitude(Array);
-	Array = averageTransform(Array)
-	Array = exponentialTransform(Array)
-	// Array = timeDomainTransform(Array, TimeArray);
-	Array = powTransform(Array, TimeArray)
-	Array = experimentalTransform(Array);
-	Array = normalizeAmplitude(Array);
-	return Array;
+function TransformToVisualBins(dataArray, TimeArray) {
+	dataArray = normalizeAmplitude(dataArray);
+
+	dataArray = averageTransform(dataArray)
+	dataArray = exponentialTransform(dataArray)
+	// dataArray = timeDomainTransform(dataArray, TimeArray);
+	dataArray = powTransform(dataArray, TimeArray);
+    dataArray = controlSections(dataArray);
+	dataArray = experimentalTransform(dataArray);
+	dataArray = normalizeAmplitude(dataArray);
+  handlePad(dataArray);
+	return dataArray;
 }
 
 function averageTransform(array) {
@@ -246,8 +249,8 @@ function exponentialTransform(array) {
 }
 
 // top secret bleeding-edge shit in here
-function experimentalTransform(array) {
-	var resistance = 3; // magic constant
+function experimentalTransform(array,r) {
+	var resistance = r || 3; // magic constant
 	var newArr = [];
 	for (var i = 0; i < array.length; i++) {
 		var sum = 0;
@@ -547,6 +550,17 @@ function experimentalTransform(array) {
 	return newArr;
 }*/
 
+var POWER = {
+  1: {
+    lower: 2,
+    upper: 1.5
+  },
+  2: {
+    lower:1,
+    upper:2
+  }
+}
+
 function powTransform(array, time) {
 	var regTime = smallerTime(time);
 	var newTime = smooth(averageTransform(normalizeAmplitude(regTime)));
@@ -615,6 +629,21 @@ function smallerTime(time) {
 		newTime.push(time[i]);
 	}
 	return newTime;
+}
+
+function controlSections(array) {
+  var newArr = array.map(function(a,b,c) {
+    if (0 <= b && b <= 21) {
+      return a;
+    } else if (22 <= b && b <= 42) {
+      return a;
+    } else if (43 <= b && b <= 63) {
+      return a;
+    }
+		var section = []; // 0 21 22 42 43 63
+
+  });
+  return newArr;
 }
 
 

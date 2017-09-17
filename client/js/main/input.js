@@ -42,6 +42,7 @@ DisplayTime = DisplayTime * 1000
 function UpdateVolume() {
 	GainNode.gain.value = (Volume / 100) - 1
 	SetCookie("volume", Volume.toString())
+  displayVolume();
 }
 
 function BoolToText(Bool) {
@@ -140,3 +141,22 @@ if (LastVolume) {
 }
 UpdateText()
 UpdateVolume()
+
+function pauses() {
+  var Time = Date.now()
+  if (Paused == true) {
+    CurrentTimeOffset = CurrentTimeOffset + (Time - PausedAt)
+    CreateSourceBuffer(Source)
+    Source.start(0, TimePausedAt / 1000)
+      output.playNote(10,6,{velocity:3,rawVelocity:true});
+
+    Paused = false
+  } else {
+    Paused = true
+    PausedAt = Time
+    TimePausedAt = Time - StartTime - CurrentTimeOffset
+      output.playNote(10,6,{velocity:1,rawVelocity:true});
+
+    Source.stop()
+  }
+}

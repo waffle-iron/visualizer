@@ -6,6 +6,35 @@ WebMidi.enable(function(err) {
 		console.log("WebMidi enabled!");
 		output = WebMidi.getOutputByName("Launchpad Pro Standalone Port");
 		input = WebMidi.getInputByName("Launchpad Pro Standalone Port");
+    input.on("controlchange", "all", function(event) {
+      switch (event.data[1]) {
+        case 89:
+        case 79:
+        case 69:
+        case 59:
+        case 49:
+        case 39:
+        case 29:
+        case 19:
+          var part = (event.data[1]-9)/10
+          Volume = (100/8)*part;
+          UpdateVolume();
+          break;
+        case 10:
+          if (event.data[2] == 0) pauses();
+          break;
+        default:
+          console.log("UNUSED: " + event.data);
+          break;
+      }
+    });
+    clearPad();
+    output.playNote(10,6,{velocity:3,rawVelocity:true});
+    UpdateVolume();
+    for (var i = 0; i < 8; i++) {
+      prev.push([0,0,0,0,0,0,0,0]);
+    }
+    volPrev= [1,1,1,1,1,1,1,1];
 	}
 
 });
@@ -19,18 +48,83 @@ function clearPad() {
 	for (var i = 0; i < 100; i++) {
 		output.stopNote(i, "all");
 	}
+  for (var i = 0; i < 8; i++) {
+    prev[i]=[0,0,0,0,0,0,0,0];
+  }
+}
+
+function displayVolume() {
+  var level = Volume * 8 / 100;
+  for (var i = 0; i < level; i++) {
+    if (volPrev[i] !== 1){
+      volPrev[i] = 1;
+      output.playNote(volMap[i],6,{velocity: 7, rawVelocity: true});
+    }
+	if (i == level - 1){
+volPrev[i] = 2;
+	output.playNote(volMap[i],6,{velocity: 4, rawVelocity: true});
+
+}
+  }
+  for (var i = level; i < 8; i++) {
+    if (volPrev[i] !== 0){
+      volPrev[i] = 0;
+      output.playNote(volMap[i],6,{velocity: 0, rawVelocity: true});
+    }
+  }
 }
 
 function handlePad(array) {
-	for (var i = 0; i < 63; i += 9) {
-		var avg = math.max(Array.from(array.slice(i, i + 9)))
-		var _i = normalize(avg, 255, 0, l.length - 1, 0);
-		var li = l[Math.floor(_i)];
-		var __i = normalize(li, 127, 0, 1, 0);
-		for (var j = 0; j < 8; j++) {
-			output.playNote(Math.floor(normalize(i, 63, 0, 18, 11)) + (j * 10), "all", {
-				velocity: __i
-			});
-		}
+  var bars = [];
+	for (var i = 3; i < 63; i += 7) {
+    var _avg = math.max(Array.from(array.slice(i, i + 7)))
+    var avg = normalize(_avg,0,255,-1,8);
+    bars.push(math.round(avg));
 	}
+	var bars2 = experimentalTransform(bars,7);
+  var bars3 = bars2.map(function(a,b,c){return Math.floor(a);})
+  drawBars(bars3);
+}
+
+var map = [[11,21,31,41,51,61,71,81],
+          [12,22,32,42,52,62,72,82],
+          [13,23,33,43,53,63,73,83],
+          [14,24,34,44,54,64,74,84],
+          [15,25,35,45,55,65,75,85],
+          [16,26,36,46,56,66,76,86],
+          [17,27,37,47,57,67,77,87],
+          [18,28,38,48,58,68,78,88]];
+
+
+var volMap = [19,29,39,49,59,69,79,89];
+
+var volPrev = [];
+var prev = [];
+
+function drawBars(levels) {
+  messages = 0;
+  for (var i in levels) {
+    level = levels[i];
+    section = map[i];
+    for (var j in section) {
+      if (j <= levels[i]) {
+        if (prev[i][j] == 0) {
+          prev[i][j] = 1;
+          output.playNote(section[j],6,{velocity:Number(j)+60,rawVelocity:true});
+          messages++;
+        } else {
+
+        }
+      } else if (j > levels[i]) {
+        if (prev[i][j] == 1) {
+          prev[i][j] = 0;
+          messages++;
+          output.playNote(section[j],6,{velocity:0,rawVelocity:true});
+        } else {
+
+        }
+      }
+    }
+  }
+  $("#Link1").text(String(messages));
 }
