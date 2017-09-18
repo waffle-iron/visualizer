@@ -23,6 +23,11 @@ WebMidi.enable(function(err) {
         case 10:
           if (event.data[2] == 0) pauses();
           break;
+        case 94:
+          if (event.data[2] == 0) {
+            playNextSongInQueue();
+          }
+          break;
         default:
           console.log("UNUSED: " + event.data);
           break;
@@ -54,7 +59,7 @@ function clearPad() {
 }
 
 function displayVolume() {
-  var level = Volume * 8 / 100;
+  var level = math.floor(normalize(Volume,0,100,0,8));
   for (var i = 0; i < level; i++) {
     if (volPrev[i] !== 1){
       volPrev[i] = 1;

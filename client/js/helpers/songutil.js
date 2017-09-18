@@ -320,7 +320,7 @@ function nextSongInQueue() {
 }
 
 function playCurrentSong() {
-
+  audio.play().then(function(){
 
 	ArtistName = currentSong.meta.artist;
 	SongName = currentSong.meta.title;
@@ -408,7 +408,8 @@ function playCurrentSong() {
 	TextCycles = []
 	//Load sound
 	LoadSound(ArtistLogo, Album)
-	CreateNewFleck()
+	CreateNewFleck();
+});
 }
 
 function addSoundcloudToQueue(url) {
