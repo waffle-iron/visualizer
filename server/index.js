@@ -3,6 +3,8 @@ var url = require('url');
 var http = require('http');
 var path = require('path');
 
+var chalk = require("chalk");
+
 var mongoose = require('mongoose');
 var passport = require('passport');
 var flash = require('connect-flash');
@@ -74,6 +76,6 @@ app.use('/', mainRoute);
 
 module.exports = function() {
 	app.listen(process.env.PORT || 80, function() {
-		console.log("listening on *:8080");
+		console.log("listening on *:80");
 	});
 }

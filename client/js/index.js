@@ -115,7 +115,7 @@ function drawBars(levels) {
       if (j <= levels[i]) {
         if (prev[i][j] == 0) {
           prev[i][j] = 1;
-          output.playNote(section[j],6,{velocity:Number(j)+60,rawVelocity:true});
+          output.playNote(section[j],6,{velocity:Number(i)+60,rawVelocity:true});
           messages++;
         } else {
 
