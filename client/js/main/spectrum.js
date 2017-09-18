@@ -298,3 +298,11 @@ $(document).ready(function() {
 	}
 
 })
+
+var playNextSongInQueue = function() {
+  nextSongInQueue();
+  audio.play().then(function() {
+      playCurrentSong();
+  });
+
+}
