@@ -121,12 +121,18 @@ function GetVisualBins(Array) {
 
 function TransformToVisualBins(dataArray, TimeArray) {
 	dataArray = normalizeAmplitude(dataArray);
-
+	function partialPow(array) {
+		var start = array.slice(0,array.length/2);
+		var end = array.slice(array.length/2,array.length);
+		var newEnd = powTransformWhole(end);
+    return start.concat(newEnd);
+  }
+	dataArray = powTransformWhole(dataArray);
 	dataArray = averageTransform(dataArray)
 	dataArray = exponentialTransform(dataArray)
 	// dataArray = timeDomainTransform(dataArray, TimeArray);
 	dataArray = powTransform(dataArray, TimeArray);
-    dataArray = controlSections(dataArray);
+//     dataArray = controlSections(dataArray);
 	dataArray = experimentalTransform(dataArray);
 	dataArray = normalizeAmplitude(dataArray);
   handlePad(dataArray);
@@ -585,6 +591,40 @@ function powTransform(array, time) {
 
 		var dr = r / 255
 		var powerFactor2 = normalize(v, math.max(section), math.min(section), 1, 2);
+		var r2 = Math.pow(dr, (1 - (dr * pdv)) * powerFactor) * 255
+		newArr[i] = r2
+		// 		newArr[i] = section[i%21]||0
+	};
+	if (math.max(newArr) >= 255) {
+		newArr = newArr.map(function(v) {
+			return normalize(v, math.max(newArr), math.min(newArr), 255, 0)
+		});
+	}
+	if (math.min(newArr) <= 0) {
+		newArr = newArr.map(function(v) {
+			return normalize(v, math.max(newArr), math.min(newArr), 255, 1)
+		});
+	}
+	for (var i = 0; i < array.length; i++) {
+		// newArr[i] = normalize(newArr[i],0,255,255,0)
+	}
+
+
+	return newArr;
+}
+
+function powTransformWhole(array) {
+	var newArr = [];
+	for (var i = 0; i < array.length; i++) {
+
+		var v = array[i];
+		var dv = v / 255
+		var powerFactor = normalize(v, math.max(array), math.min(array), 2, 1.5);
+		var pdv = normalize(v, math.max(array), 0, 1, 0);
+		var r = Math.pow(dv, (1 - (dv * pdv)) * powerFactor) * 255
+
+		var dr = r / 255
+		var powerFactor2 = normalize(v, math.max(array), math.min(array), 1, 2);
 		var r2 = Math.pow(dr, (1 - (dr * pdv)) * powerFactor) * 255
 		newArr[i] = r2
 		// 		newArr[i] = section[i%21]||0
