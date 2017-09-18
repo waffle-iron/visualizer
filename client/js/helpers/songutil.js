@@ -419,6 +419,11 @@ function addSoundcloudToQueue(url) {
 		var artist = track.user.username
 		var stream = track.stream_url + "?client_id=3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc";
 		// addToQueue([artist, title, "Electro", stream, artworkURL, "4usingle"])
+    if (artist == "Monstercat") {
+      var trackData = title.split("-");
+      artist = trackData[0];
+      title = trackData[1];
+    }
     addToQueue({
       type: "soundcloud",
       meta: {
