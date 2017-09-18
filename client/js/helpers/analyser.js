@@ -127,7 +127,7 @@ function TransformToVisualBins(dataArray, TimeArray) {
 		var newEnd = powTransformWhole(end);
     return start.concat(newEnd);
   }
-	dataArray = powTransformWhole(dataArray);
+	// dataArray = powTransformWhole(dataArray);
 	dataArray = averageTransform(dataArray)
 	dataArray = exponentialTransform(dataArray)
 	// dataArray = timeDomainTransform(dataArray, TimeArray);
