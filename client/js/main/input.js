@@ -79,14 +79,13 @@ Body.addEventListener("keydown", function(Key) {
 			var Time = Date.now()
 			if (Paused == true) {
 				CurrentTimeOffset = CurrentTimeOffset + (Time - PausedAt)
-				CreateSourceBuffer(Source)
-				Source.start(0, TimePausedAt / 1000)
+        audio.play();
 				Paused = false
 			} else {
 				Paused = true
 				PausedAt = Time
 				TimePausedAt = Time - StartTime - CurrentTimeOffset
-				Source.stop()
+        audio.pause();
 			}
 			UpdateText()
 		} else if (KeyCode == "KeyE") {
@@ -94,7 +93,9 @@ Body.addEventListener("keydown", function(Key) {
 				DownloadSongData = !DownloadSongData
 				UpdateText()
 			}
-		} else if (KeyCode == "ArrowUp") {
+		} else if (KeyCode == "KeyA") {
+      addSoundcloudToQueue(prompt("Soundcloud URL:"));
+    } else if (KeyCode == "ArrowUp") {
 			Volume = Volume + 5
 			if (Volume > 100) {
 				Volume = 100
@@ -128,7 +129,9 @@ Body.addEventListener("keydown", function(Key) {
 			}
 		} else if (KeyCode == "KeyF") {
 			toggleFullScreen();
-		}
+		} else if (KeyCode == "ArrowRight") {
+      playNextSongInQueue();
+    }
 	}
 });
 

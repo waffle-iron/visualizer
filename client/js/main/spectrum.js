@@ -290,9 +290,19 @@ function HandleAudio() {
 
 
 
-InitializeSpectrumHandler()
 $(document).ready(function() {
+  initNodes();
 	if ($_GET("type") == "soundcloud") {
-		playSoundcloud($_GET("url"));
+		addSoundcloudToQueue($_GET("url"));
+
 	}
+
 })
+
+var playNextSongInQueue = function() {
+  nextSongInQueue();
+  audio.oncanplay = function() {
+    playCurrentSong();
+  }
+
+}

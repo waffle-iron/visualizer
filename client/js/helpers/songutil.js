@@ -1,6 +1,7 @@
-var Context = new AudioContext()
+var Context = new AudioContext();
+var audio = $("#audio")[0];
 var SampleRate = Context.sampleRate
-var Source
+var Source;
 var Analyser = Context.createAnalyser();
 var GainNode = Context.createGain();
 var AudioNode = Context.createScriptProcessor(BufferInterval, 1, 1)
@@ -11,6 +12,12 @@ SC.initialize({
 	redirect_uri: 'music.marisusis.me/auth'
 });
 
+var queue = [];
+var currentSong = {};
+var queueSpot = -1;
+
+var sc = new SoundCloudLoader("3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc");
+
 var ArtistText = document.getElementById("Artist")
 var SongNameText = document.getElementById("SongName")
 var Title = document.getElementById("Title")
@@ -19,15 +26,14 @@ var StartTime = 0
 var TimeLength = 0
 var Playing = false
 
-var Songs = [];
+
 var AlbumRotations = []
 var NextAlbumRotation = 0
 var TextCycles = []
 var NextTextCycle = 0
 
 var GenreColor = "#FFFFFF"
-var SongSpot = -1
-var SongOrder = []
+
 var ArtistName = ""
 var SongName = ""
 var GenreName = ""
@@ -73,116 +79,117 @@ function PushValues(NewValue) {
 	return FirstValue
 }
 
+function initNodes() {
+  // CreateSourceBuffer()
+	Source = Context.createMediaElementSource(audio);
+	// Source.connect(GainNode);
+	delayNode.delayTime.value = 0.3;
+
+	muteGainNode = Context.createGain();
+	muteGainNode.gain.value = -1;
+	Source.connect(muteGainNode);
+	muteGainNode.connect(Context.destination);
+	Source.connect(GainNode);
+	GainNode.connect(delayNode);
+	Source.connect(delayNode);
+	delayNode.connect(Context.destination);
+
+	// Source.onended = function() {
+	// 	if (Paused == false) {
+	// 		stop()
+	// 		playSong(Songs[SongSpot]);
+	// 	}
+	// }
+  // Songs = new Array();
+	AudioNode.onaudioprocess = HandleAudio
+	Analyser.fftSize = FFTSize
+	Analyser.smoothingTimeConstant = 0
+
+
+
+	AudioNode.connect(Context.destination);
+
+	Analyser.connect(AudioNode);
+	Source.connect(Analyser);
+
+	Source.connect(Context.destination)
+}
 
 var CachedAudio = []
 
-function GetAudioSource(Url, Callback) {
-	var ExistingResponse = CachedAudio[Url]
-	if (ExistingResponse) {
-		if (Callback) {
-			Callback(ExistingResponse)
-		}
-	} else {
-		var Request = new XMLHttpRequest()
-		Request.open("GET", Url, true)
-		Request.responseType = 'arraybuffer'
-
-		Request.onload = function() {
-			Context.decodeAudioData(Request.response, function(Buffer) {
-				CachedAudio[Url] = Buffer
-				var CacheToClear = PushValues(Url)
-				if (CacheToClear) {
-					CachedAudio[CacheToClear] = null
-				}
-
-				if (Callback) {
-					Callback(Buffer)
-				}
-			}, function(Message) {
-				console.log(Message)
-			});
-		}
-
-		Request.send()
-	}
-}
-
-function LoadSound(Url, ArtistLogo, Album) {
+function LoadSound(ArtistLogo, Album) {
 	StartTime = false
 
-	function Callback(Buffer) {
-		Stopped = false
-		CreateSourceBuffer()
-		Source.buffer = Buffer
-		Source.connect(Context.destination)
+	Stopped = false
 
-		TimeLength = Math.round(Buffer.duration * 1000)
-		StartTime = Date.now()
-		Playing = true
 
-		MainDiv.style.display = "block"
-		LoadingDiv.style.display = "none"
+	TimeLength = Math.round(audio.duration * 1000)
+	StartTime = Date.now()
+	Playing = true
 
-		var AlbumImageLink = "img/albums/" + Album + ".png"
-		Preload(MonstercatLogo.innerHTML)
-		AlbumRotations[0] = [0.5 * 1000, "Open"]
-		if (ArtistLogo != null) {
-			Preload(ArtistLogo)
-			AlbumRotations[AlbumRotations.length] = [15 * 1000, "Turn", ArtistLogo]
-		}
-		if (AlbumImageLink != undefined) {
-			Preload(AlbumImageLink)
-			AlbumRotations[AlbumRotations.length] = [30 * 1000, "Turn", AlbumImageLink]
-			AlbumRotations[AlbumRotations.length] = [TimeLength - (30 * 1000), "Turn", ArtistLogo]
-		}
-		if (ArtistLogo != null) {
-			AlbumRotations[AlbumRotations.length] = [TimeLength - (15 * 1000), "Turn"]
-		}
-		AlbumRotations[AlbumRotations.length] = [TimeLength - (0.5 * 1000), "Close"]
+	MainDiv.style.display = "block"
+	LoadingDiv.style.display = "none"
 
-		var AlbumData = Albums[Album]
-		var LPSongNameData = LPSongNames[SongName]
+	var AlbumImageLink = "img/albums/" + Album + ".png"
+	Preload(MonstercatLogo.innerHTML)
+	AlbumRotations[0] = [0.5 * 1000, "Open"]
+	if (ArtistLogo != null) {
+		Preload(ArtistLogo)
+		AlbumRotations[AlbumRotations.length] = [15 * 1000, "Turn", ArtistLogo]
+	}
+	if (AlbumImageLink != undefined) {
+		Preload(AlbumImageLink)
+		AlbumRotations[AlbumRotations.length] = [30 * 1000, "Turn", AlbumImageLink]
+		AlbumRotations[AlbumRotations.length] = [TimeLength - (30 * 1000), "Turn", ArtistLogo]
+	}
+	if (ArtistLogo != null) {
+		AlbumRotations[AlbumRotations.length] = [TimeLength - (15 * 1000), "Turn"]
+	}
+	AlbumRotations[AlbumRotations.length] = [TimeLength - (0.5 * 1000), "Close"]
 
-		if (LPSongNameData != null) {
-			var StartSong = LPSongNameData[0]
-			if (StartSong != null && StartSong[0] == 0) {
-				TextCycles[0] = [1000, "Open", "Song", StartSong[1], StartSong[2]]
-			} else {
-				TextCycles[0] = [1000, "Open", "Song", ArtistName, SongName]
-			}
+	var AlbumData = Albums[Album]
+	var LPSongNameData = LPSongNames[SongName]
+
+	if (LPSongNameData != null) {
+		var StartSong = LPSongNameData[0]
+		if (StartSong != null && StartSong[0] == 0) {
+			TextCycles[0] = [1000, "Open", "Song", StartSong[1], StartSong[2]]
 		} else {
 			TextCycles[0] = [1000, "Open", "Song", ArtistName, SongName]
 		}
-
-		if (LPSongNameData != null) {
-			for (var i = 0; i < LPSongNameData.length; i++) {
-				var CurrentSong = LPSongNameData[i]
-				TextCycles[TextCycles.length] = [CurrentSong[0], "Change", "Song", CurrentSong[1], CurrentSong[2]]
-			}
-		} else if (AlbumData != undefined) {
-			var TimeDivision = TimeLength * (1 / (AlbumData[1].length + 1))
-			for (var i = 0; i < AlbumData[1].length; i++) {
-				TextCycles[TextCycles.length] = [TimeDivision * (i + 1), "Change", "Album", AlbumData[0], AlbumData[1][i]]
-			}
-		}
-		TextCycles[TextCycles.length] = [TimeLength - 1000, "Close"]
-
-		if (GenreName != "") {
-			document.title = "[" + GenreName + "] " + SingleLineArtistName + " - " + SingleLineSongName
-		} else {
-			document.title = SingleLineArtistName + " - " + SingleLineSongName
-		}
-		Source.start(0)
+	} else {
+		TextCycles[0] = [1000, "Open", "Song", ArtistName, SongName]
 	}
 
-	GetAudioSource(Url, Callback)
+	if (LPSongNameData != null) {
+		for (var i = 0; i < LPSongNameData.length; i++) {
+			var CurrentSong = LPSongNameData[i]
+			TextCycles[TextCycles.length] = [CurrentSong[0], "Change", "Song", CurrentSong[1], CurrentSong[2]]
+		}
+	} else if (AlbumData != undefined) {
+		var TimeDivision = TimeLength * (1 / (AlbumData[1].length + 1))
+		for (var i = 0; i < AlbumData[1].length; i++) {
+			TextCycles[TextCycles.length] = [TimeDivision * (i + 1), "Change", "Album", AlbumData[0], AlbumData[1][i]]
+		}
+	}
+	TextCycles[TextCycles.length] = [TimeLength - 1000, "Close"]
+
+	if (GenreName != "") {
+		document.title = "[" + GenreName + "] " + SingleLineArtistName + " - " + SingleLineSongName
+	} else {
+		document.title = SingleLineArtistName + " - " + SingleLineSongName
+	}
+
+
+
 
 	var NextSongSpot = SongSpot + 1
 	if (NextSongSpot > Songs.length - 1) {
 		NextSongSpot = 0
 	}
 	var NextSongData = Songs[0]
-	GetAudioSource(NextSongData[3], function() {})
+	// GetAudioSource(NextSongData[3], function() {})
+
 }
 
 
@@ -245,100 +252,6 @@ function GetRandomTableOfNumbers(Numbers) {
 	return Table
 }
 
-function PlayRandomSong() {
-	SongSpot++
-	if (SongSpot > Songs.length - 1) {
-		SongSpot = 0
-	}
-
-	var SongData = Songs[SongOrder[SongSpot]]
-	ArtistName = SongData[0]
-	SongName = SongData[1]
-	SingleLineSongName = RemoveNewLines(SongName)
-	SingleLineArtistName = RemoveNewLines(ArtistName)
-	GenreName = SongData[2]
-	var FileName = SongData[3]
-	var ArtistLogo = SongData[4]
-	var Album = SongData[5]
-
-
-	GenreColor = GetColorFromGenre(GenreName)
-
-	if (EncodeEnabledByDefault == true) {
-		DownloadSongData = true
-	} else {
-		DownloadSongData = false
-	}
-
-	RevertCustomBackgroundChanges()
-
-	var SongBackgroundOverride = SongBackgrounds[SingleLineSongName]
-	var AlbumBackgroundOverride = AlbumBackgrounds[Album]
-	var ArtistBackgroundOverride = ArtistBackgrounds[ArtistName]
-
-	var FullBackgroundData
-	if (SongBackgroundOverride) {
-		if (SongBackgroundOverride[0]) {
-			FullBackgroundData = SongBackgroundOverride[0]
-		}
-		if (SongBackgroundOverride[1]) {
-			GenreColor = SongBackgroundOverride[1]
-		}
-		if (SongBackgroundOverride[2]) {
-			SongBackgroundOverride[2]()
-		}
-	} else if (AlbumBackgroundOverride) {
-		if (AlbumBackgroundOverride[0]) {
-			FullBackgroundData = AlbumBackgroundOverride[0]
-		}
-		if (AlbumBackgroundOverride[1]) {
-			GenreColor = AlbumBackgroundOverride[1]
-		}
-		if (AlbumBackgroundOverride[2]) {
-			AlbumBackgroundOverride[2]()
-		}
-	} else if (ArtistBackgroundOverride) {
-		if (ArtistBackgroundOverride[0]) {
-			FullBackgroundData = ArtistBackgroundOverride[0]
-		}
-		if (ArtistBackgroundOverride[1]) {
-			GenreColor = ArtistBackgroundOverride[1]
-		}
-		if (ArtistBackgroundOverride[2]) {
-			ArtistBackgroundOverride[2]()
-		}
-	}
-
-
-	if (FullBackgroundData) {
-		DrawParticles = false
-		var BackgroundData = FullBackgroundData[Math.floor(Math.random() * FullBackgroundData.length)]
-		BackgroundImage.src = BackgroundData[0]
-		BackgroundWidth = BackgroundData[1]
-		BackgroundHeight = BackgroundData[2]
-		ColorBackground.style.backgroundColor = BackgroundData[3]
-	} else {
-		DrawParticles = true
-		BackgroundImage.src = "img/blankpixel.png"
-		ColorBackground.style.backgroundColor = "#000000"
-	}
-
-	MainDiv.style.display = "none"
-	LoadingDiv.style.display = "block"
-	document.title = "Loading..."
-	if (GenreName != "") {
-		LoadingText.innerHTML = "Loading...<br>[" + GenreName + "] " + SingleLineArtistName + " - " + SingleLineSongName
-	} else {
-		LoadingText.innerHTML = "Loading...<br>" + SingleLineArtistName + " - " + SingleLineSongName
-	}
-
-	NextAlbumRotation = 0
-	AlbumRotations = []
-	NextTextCycle = 0
-	TextCycles = []
-	LoadSound(FileName, ArtistLogo, Album)
-	CreateNewFleck()
-}
 
 function ForceStop() {
 	Playing = false
@@ -380,79 +293,42 @@ function stop() {
 	}
 }
 
-function CreateSourceBuffer(ExistingBuffer) {
-	Source = Context.createBufferSource()
-	// Source.connect(GainNode);
-	delayNode.delayTime.value = 0.3;
-
-
-	if (ExistingBuffer != null) {
-		Source.buffer = ExistingBuffer.buffer
-		Source.connect(Context.destination)
-	}
-
-	muteGainNode = Context.createGain();
-	muteGainNode.gain.value = -1;
-	Source.connect(muteGainNode);
-	muteGainNode.connect(Context.destination);
-	Source.connect(GainNode);
-	GainNode.connect(delayNode);
-	Source.connect(delayNode);
-	delayNode.connect(Context.destination);
-
-	Source.onended = function() {
-		if (Paused == false) {
-			stop()
-			playSong(Songs[SongSpot]);
-		}
-	}
-	InitializeSpectrumHandler();
-	Source.connect(Analyser);
-}
-
-function InitializeSpectrumHandler() {
-	Songs = new Array();
-	AudioNode.onaudioprocess = HandleAudio
-	Analyser.fftSize = FFTSize
-	Analyser.smoothingTimeConstant = 0
-
-
-
-	AudioNode.connect(Context.destination);
-
-	Analyser.connect(AudioNode);
-
-
-}
-
 function addToQueue(song) {
-	Songs.push(song);
-	// var NextSongSpot = SongSpot + 1
-	// if (NextSongSpot > Songs.length - 1) {
-	// 	NextSongSpot = 0
-	// }
-	// var NextSongData = Songs[Songs.length - 1];
-	// GetAudioSource(NextSongData[3], function() {})
+	queue.push(song);
 }
 
-function playSong() {
-	begun = true;
+function nextSongInQueue() {
+  if (queueSpot + 1 >= queue.length) {
+    queueSpot = 0;
+  } else {
+    queueSpot++;
+  }
+  currentSong = queue[queueSpot];
+  switch (currentSong.type) {
+    case "soundcloud":
+      sc.load({
+        track: currentSong.data.url,
+        player: '#audio'
+      });
+      break;
+    case "url":
+      audio.src = currentSong.data.url;
+    default:
+      console.error("Unknown source: \"" + currentSong.type + "\"");
+      break;
+  }
+}
 
+function playCurrentSong() {
+  audio.play().then(function(){
 
-	SongSpot++
-	if (SongSpot > Songs.length - 1) {
-		SongSpot = 0
-	}
-
-	var SongData = Songs[SongSpot];
-	ArtistName = SongData[0]
-	SongName = SongData[1]
+	ArtistName = currentSong.meta.artist;
+	SongName = currentSong.meta.title;
 	SingleLineSongName = RemoveNewLines(SongName)
 	SingleLineArtistName = RemoveNewLines(ArtistName)
-	GenreName = SongData[2]
-	var FileName = SongData[3]
-	var ArtistLogo = SongData[4]
-	var Album = SongData[5]
+	GenreName = "Electro";
+	var ArtistLogo = currentSong.albumArtworkUrl; //Change to artist profile picture & move album art to separate variable
+	var Album = "saf";
 
 
 	GenreColor = GetColorFromGenre(GenreName)
@@ -530,25 +406,59 @@ function playSong() {
 	AlbumRotations = []
 	NextTextCycle = 0
 	TextCycles = []
-	LoadSound(FileName, ArtistLogo, Album)
-	CreateNewFleck()
+	//Load sound
+	LoadSound(ArtistLogo, Album)
+	CreateNewFleck();
+});
 }
 
-function playSoundcloud(url) {
-	SC.resolve(url).then(function(track) {
+function addSoundcloudToQueue(url) {
+  SC.resolve(url).then(function(track) {
 		var title = track.title;
 		var artworkURL = track.artwork_url;
 		var artist = track.user.username
 		var stream = track.stream_url + "?client_id=3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc";
-		addToQueue([artist, title, "Electro", stream, artworkURL, "4usingle"])
-		playSong();
-		// if (!begun) {
-		//  playSong();
-		// 	} else if (!Stopped) {
-		//
-		// } else {
-		// 	playSong();
-		// }
+		// addToQueue([artist, title, "Electro", stream, artworkURL, "4usingle"])
+    if (artist == "Monstercat") {
+      var trackData = title.split("-");
+      artist = trackData[0];
+      title = trackData[1];
+    }
+    addToQueue({
+      type: "soundcloud",
+      meta: {
+        title: title,
+        artist: artist,
+        albumArtworkUrl: artworkURL
+      },
+      data: {
+        url: url
+      }
+    });
 		console.log(track);
 	});
+}
+
+function addUrlToQueue(url, meta) {
+  if (meta == null) {
+    addToQueue({
+      type: "url",
+      meta: {
+        title: "URL",
+        artist: "SOURCE",
+        albumArtworkUrl: "none"
+      },
+      data: {
+        url: url
+      }
+    });
+  } else {
+    addToQueue({
+      type: "url",
+      meta: meta,
+      data: {
+        url: url
+      }
+    });
+  }
 }
