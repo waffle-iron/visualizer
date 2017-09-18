@@ -311,6 +311,8 @@ function nextSongInQueue() {
         player: '#audio'
       });
       break;
+    case "url":
+      audio.src = currentSong.data.url;
     default:
       console.error("Unknown source: \"" + currentSong.type + "\"");
       break;
@@ -409,38 +411,6 @@ function playCurrentSong() {
 	CreateNewFleck()
 }
 
-function playSoundcloud(url) {
-	SC.resolve(url).then(function(track) {
-		var title = track.title;
-		var artworkURL = track.artwork_url;
-		var artist = track.user.username
-		var stream = track.stream_url + "?client_id=3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc";
-		// addToQueue([artist, title, "Electro", stream, artworkURL, "4usingle"])
-    addToQueue({
-      type: "soundcloud",
-      meta: {
-        title: title,
-        artist: artist,
-        albumArtworkUrl: artworkURL
-      },
-      data: {
-        url: url
-      }
-    })
-
-
-		// if (!begun) {
-		//  playSong();
-		// 	} else if (!Stopped) {
-		//
-		// } else {
-		// 	playSong();
-		// }
-		console.log(track);
-    playNextSongInQueue();
-	});
-}
-
 function addSoundcloudToQueue(url) {
   SC.resolve(url).then(function(track) {
 		var title = track.title;
@@ -461,4 +431,28 @@ function addSoundcloudToQueue(url) {
     });
 		console.log(track);
 	});
+}
+
+function addUrlToQueue(url, meta) {
+  if (meta == null) {
+    addToQueue({
+      type: "url",
+      meta: {
+        title: "URL",
+        artist: "SOURCE",
+        albumArtworkUrl: "none"
+      },
+      data: {
+        url: url
+      }
+    });
+  } else {
+    addToQueue({
+      type: "url",
+      meta: meta,
+      data: {
+        url: url
+      }
+    });
+  }
 }

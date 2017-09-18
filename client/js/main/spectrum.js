@@ -293,7 +293,8 @@ function HandleAudio() {
 $(document).ready(function() {
   initNodes();
 	if ($_GET("type") == "soundcloud") {
-		playSoundcloud($_GET("url"));
+		addSoundcloudToQueue($_GET("url"));
+
 	}
 
 })
