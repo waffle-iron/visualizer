@@ -128,3 +128,33 @@ function drawBars(levels) {
   }
   $("#Link1").text(String(messages));
 }
+
+
+function get(url, cb) {
+  var req = new XMLHttpRequest();
+  req.onreadystatechange = function() {
+    if (req.readyState === 4 && req.status === 200) {
+      cb(req.responseText);
+    }
+  }
+  req.open("GET", url, true);
+  req.send(null);
+}
+
+var SoundCloudLoader = function(client_id) {
+  var self = this;
+  this.cid = client_id;
+  this.load = function(settings) {
+    get('https://api.soundcloud.com/resolve?url='+settings.track+'&client_id='+this.cid,function(response) {
+      var res = JSON.parse(response);
+      self.streamurl = res.stream_url + '?client_id='+client_id;
+      if (settings.player.constructor == jQuery&&jQuery) {
+        settings.player[0].crossOrigin = "anonymous";
+        settings.player[0].src = self.streamurl;
+      } else if (typeof settings.player == 'string') {
+        document.querySelector(settings.player).crossOrigin = "anonymous";
+        document.querySelector(settings.player).src=self.streamurl;
+      }
+    });
+  }
+}

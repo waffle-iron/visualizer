@@ -290,9 +290,10 @@ function HandleAudio() {
 
 
 
-InitializeSpectrumHandler()
 $(document).ready(function() {
+  initNodes();
 	if ($_GET("type") == "soundcloud") {
 		playSoundcloud($_GET("url"));
 	}
+
 })
