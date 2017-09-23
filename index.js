@@ -1,11 +1,16 @@
 var chalk = require("chalk");
 var winston = require("winston");
 
-var log = console.log;
+winston.info(chalk.yellow(charLen("\u258A","Starting Visualizer...".length)));
+winston.info(chalk.red.bold("Starting Visualizer..."));
+winston.info(chalk.yellow(charLen("\u258A","Starting Visualizer...".length)));
 
-
-log(chalk.keyword('orange')('Yay for orange colored text!'));
-log(chalk.rgb(123, 45, 67).underline('Underlined reddish color'));
-log(chalk.hex('#DEADED').bold('Bold gray!'));
+function charLen(c,len) {
+  out = "";
+  for (var i = 0; i < len; i++) {
+    out += c;
+  }
+  return out;
+}
 
 require("./server/index.js")();

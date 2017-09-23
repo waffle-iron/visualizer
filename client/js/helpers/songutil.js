@@ -313,6 +313,7 @@ function nextSongInQueue() {
       break;
     case "url":
       audio.src = currentSong.data.url;
+      break;
     default:
       console.error("Unknown source: \"" + currentSong.type + "\"");
       break;

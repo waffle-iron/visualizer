@@ -119,23 +119,48 @@ function GetVisualBins(Array) {
 	return NewArray
 }
 
+// function TransformToVisualBins(dataArray, TimeArray) {
+// 	dataArray = normalizeAmplitude(dataArray);
+// 	function partialPow(array) {
+// 		var start = array.slice(0,array.length/2);
+// 		var end = array.slice(array.length/2,array.length);
+// 		var newEnd = powTransformWhole(end);
+//     return start.concat(newEnd);
+//   }
+// 	// dataArray = powTransformWhole(dataArray);
+// 	dataArray = averageTransform(dataArray)
+// 	dataArray = exponentialTransform(dataArray)
+// 	// dataArray = timeDomainTransform(dataArray, TimeArray);
+// 	dataArray = powTransform(dataArray, TimeArray);
+// //     dataArray = controlSections(dataArray);
+// 	dataArray = experimentalTransform(dataArray);
+// 	dataArray = normalizeAmplitude(dataArray);
+//   handlePad(dataArray);
+// 	return dataArray;
+// }
+
+
 function TransformToVisualBins(dataArray, TimeArray) {
+
 	dataArray = normalizeAmplitude(dataArray);
+
 	function partialPow(array) {
-		var start = array.slice(0,array.length/2);
-		var end = array.slice(array.length/2,array.length);
+		var start = array.slice(0, 40);
+		var end = array.slice(40, array.length);
 		var newEnd = powTransformWhole(end);
-    return start.concat(newEnd);
-  }
-	// dataArray = powTransformWhole(dataArray);
+		return start.concat(newEnd);
+	}
+	// dataArray = powTransform(dataArray,TimeArray);
+	dataArray = normalizeAmplitude(dataArray);
+	dataArray = partialPow(dataArray);
 	dataArray = averageTransform(dataArray)
 	dataArray = exponentialTransform(dataArray)
 	// dataArray = timeDomainTransform(dataArray, TimeArray);
 	dataArray = powTransform(dataArray, TimeArray);
-//     dataArray = controlSections(dataArray);
+	//     dataArray = controlSections(dataArray);
 	dataArray = experimentalTransform(dataArray);
 	dataArray = normalizeAmplitude(dataArray);
-  handlePad(dataArray);
+	handlePad(dataArray);
 	return dataArray;
 }
 
@@ -255,7 +280,7 @@ function exponentialTransform(array) {
 }
 
 // top secret bleeding-edge shit in here
-function experimentalTransform(array,r) {
+function experimentalTransform(array, r) {
 	var resistance = r || 3; // magic constant
 	var newArr = [];
 	for (var i = 0; i < array.length; i++) {
@@ -557,14 +582,14 @@ function experimentalTransform(array,r) {
 }*/
 
 var POWER = {
-  1: {
-    lower: 2,
-    upper: 1.5
-  },
-  2: {
-    lower:1,
-    upper:2
-  }
+	1: {
+		lower: 2,
+		upper: 1.5
+	},
+	2: {
+		lower: 1,
+		upper: 2
+	}
 }
 
 function powTransform(array, time) {
@@ -613,6 +638,9 @@ function powTransform(array, time) {
 	return newArr;
 }
 
+
+
+
 function powTransformWhole(array) {
 	var newArr = [];
 	for (var i = 0; i < array.length; i++) {
@@ -621,11 +649,11 @@ function powTransformWhole(array) {
 		var dv = v / 255
 		var powerFactor = normalize(v, math.max(array), math.min(array), 2, 1.5);
 		var pdv = normalize(v, math.max(array), 0, 1, 0);
-		var r = Math.pow(dv, (1 - (dv * pdv)) * powerFactor) * 255
+		var r = math.pow(dv, (1 - (dv * pdv)) * powerFactor) * 255
 
-		var dr = r / 255
+		var dr = v / 255
 		var powerFactor2 = normalize(v, math.max(array), math.min(array), 1, 2);
-		var r2 = Math.pow(dr, (1 - (dr * pdv)) * powerFactor) * 255
+		var r2 = math.pow(dr, (1 - (dr * pdv)) * powerFactor) * 255
 		newArr[i] = r2
 		// 		newArr[i] = section[i%21]||0
 	};
@@ -646,9 +674,6 @@ function powTransformWhole(array) {
 
 	return newArr;
 }
-
-
-
 
 function normalize(value, max, min, dmax, dmin) {
 	return (dmax - dmin) / (max - min) * (value - max) + dmax
@@ -672,18 +697,18 @@ function smallerTime(time) {
 }
 
 function controlSections(array) {
-  var newArr = array.map(function(a,b,c) {
-    if (0 <= b && b <= 21) {
-      return a;
-    } else if (22 <= b && b <= 42) {
-      return a;
-    } else if (43 <= b && b <= 63) {
-      return a;
-    }
+	var newArr = array.map(function(a, b, c) {
+		if (0 <= b && b <= 21) {
+			return a;
+		} else if (22 <= b && b <= 42) {
+			return a;
+		} else if (43 <= b && b <= 63) {
+			return a;
+		}
 		var section = []; // 0 21 22 42 43 63
 
-  });
-  return newArr;
+	});
+	return newArr;
 }
 
 
