@@ -15,6 +15,7 @@ var bodyParser = require('body-parser');
 var session = require('express-session');
 
 
+
 // configuration ===============================================================
 try {
 	// mongoose.connect('mongodb://heroku_s5ccgckt:4qs0gmog36h51aj1j1jdfg2lp9@ds151909.mlab.com:51909/heroku_s5ccgckt'); // connect to our database
@@ -60,12 +61,18 @@ app.get('/album', function(req, res) {
 	externalReq.end();
 });
 
-var audioRoute = require('./routes/audio.js')(passport);
-var authRoute = require('./routes/auth.js')(passport);
-var userRoute = require('./routes/user.js')(passport);
-var mainRoute = require('./routes/main.js')(passport);
+var info = {
+  rootDir: path.resolve(__dirname + "/../")
+}
+
+var audioRoute = require('./routes/audio.js')(info,passport);
+var authRoute = require('./routes/auth.js')(info,passport);
+var styleRoute = require('./routes/styles.js')(info,passport);
+var userRoute = require('./routes/user.js')(info,passport);
+var mainRoute = require('./routes/main.js')(info,passport);
 app.use('/auth', authRoute);
 app.use('/audio', audioRoute);
+app.use('/styles', styleRoute);
 app.use('/user', userRoute);
 app.use('/', mainRoute);
 

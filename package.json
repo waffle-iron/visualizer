@@ -29,6 +29,7 @@
     "mongoose": "^4.8.2",
     "mongoose-findorcreate": "^1.0.0",
     "morgan": "^1.8.1",
+    "node-sass-middleware": "^0.11.0",
     "passport": "^0.3.2",
     "passport-local": "^1.0.0",
     "passport-soundcloud": "^0.2.0",

@@ -1,0 +1,235 @@
+body {
+  background: #000;
+}
+
+$widthSm: 600px;
+$widthMed: 800px;
+$widthLg: 1000px;
+
+$themeColor: #8D03E2;
+
+.player-wrap {
+  position: absolute;
+  height: 60px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  .player {
+    width: 100%;
+    height: 100%;
+    background: black;
+    display: flex;
+    flex-flow: row nowrap;
+    border-top: solid 2px #fff;
+    max-width: 100%;
+    .player-info-wrap {
+      background: #000;
+      min-width: 200px;
+      height: 100%;
+      box-sizing: border-box;
+      border-right: solid 2px #fff;
+      @media screen and (min-width: $widthMed) {
+        min-width: 240px;
+      }
+      @media screen and (min-width: $widthLg) {
+        min-width: 300px;
+      }
+      .player-info {
+        background: #000000;
+        height: 60px;
+        border-right: none;
+        border-left: none;
+        display: block;
+        padding-left: 4px;
+        transition: height 300ms;
+        .artwork {
+          height: 100%;
+          width: 25%;
+          float: left;
+          display: flex;
+          flex-flow: column nowrap;
+          align-items: left;
+          justify-content: center;
+          img.artwork-image {
+            width: 50px;
+            height: 50px;
+          }
+        }
+        .meta {
+          height: 100%;
+          text-transform: uppercase;
+          width: 75%;
+          font-family: "Lato";
+          float: left;
+          color: #ffffff;
+          display: flex;
+          flex-flow: column nowrap;
+          align-items: left;
+          box-sizing: border-box;
+          padding-top: 10px;
+          padding-left: 10px;
+          padding-bottom: 10px;
+          justify-content: space-between;
+          transition: padding 300ms;
+          .title {
+            display: block;
+            &[data-size="size-n"] {
+              font-size: 20px;
+              letter-spacing: 3px;
+            }
+            &[data-size="size-m"]  {
+              font-size: 13px;
+              letter-spacing: 2px;
+              @media screen and (min-width: $widthSm) {
+                font-size: 13px;
+              }
+            }
+            &[data-size="size-l"]  {
+              font-size: 10px;
+              letter-spacing: 1px;
+            }
+            &[data-size="size-xl"]  {
+              font-size: 6px;
+              letter-spacing: 2px;
+              @media screen and (min-width: $widthSm) {
+                font-size: 7px;
+              }
+            }
+
+          }
+          div.artist {
+            border-left: solid 1px white;
+            padding-left: 8px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+            font-size: 10px;
+            letter-spacing: 2px;
+          }
+        }
+      }
+    }
+    .player-slider-wrap {
+      position: relative;
+      background: #000;
+      width: 100%;
+      height: 100%;
+      min-width: 300px;
+      .slider-display {
+        position: relative;
+        background: #000000;
+        width: 100%;
+        height: 100%;
+        user-select: none;
+        &:hover {
+          .bar {
+            .time-display {
+              opacity: 0;
+              transition: opacity 150ms;
+            }
+          }
+        }
+        .bar {
+          background: lighten($themeColor,10%);
+          box-sizing: border-box;
+          // border-right: solid 1px #fff;
+          width: 0;
+          transition: width 500ms;
+          height: 100%;
+          z-index: 10%;
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: center;
+          justify-content: flex-end;
+          .time-display {
+            opacity: 1;
+            transition: opacity 150ms;
+            font-family: "Oswald";
+            letter-spacing: 2px;
+            font-size: 16px;
+            width: 80px;
+            height: 100%;
+            // transform: rotateZ(90deg) translateX(25px);
+            position: relative;
+            flex-flow: row nowrap;
+            align-items: flex-end;
+            justify-content: flex-end;
+            span {
+              line-height: 56px;
+            }
+          }
+        }
+        .bar-hover {
+          opacity: 0;
+          width: 0;
+          height: 100%;
+          z-index: 100;
+          transition: opacity 150ms;
+          position: absolute;
+          left: 0;
+          top: 0;
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: center;
+          justify-content: flex-end;
+          background:  transparentize(darken($themeColor,20%),0.2);
+          .hover-time-display {
+            font-family: "Oswald";
+            letter-spacing: 2px;
+            font-size: 16px;
+            width: 80px;
+            height: 100%;
+            // transform: rotateZ(90deg) translateX(25px);
+            position: relative;
+            flex-flow: row nowrap;
+            align-items: flex-end;
+            justify-content: flex-end;
+            span {
+              line-height: 56px;
+            }
+          }
+        }
+        &:hover {
+          cursor: crosshair;
+          .bar-hover {
+            opacity: 1;
+            transition: opacity 150ms;
+          }
+        }
+      }
+    }
+    .player-control-wrap {
+      background: #000;
+      height: 100%;
+      min-width: 240px;
+      border-left: solid 2px #fff;
+      color: #fff;
+      .player-control {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        flex-flow: row nowrap;
+        .control {
+          width: 25%;
+          height: 100%;
+          display: flex;
+          flex-flow: row nowrap;
+          align-items: center;
+          justify-content: center;
+          transition: background 150ms;
+          background: #000;
+          span {
+            font-size: 25px;
+          }
+          &:hover {
+            cursor: pointer;
+            background: darken($themeColor,20%);
+            transition: background 150ms;
+          }
+          &.play {
+            width: 25%;
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,262 @@
+body {
+  background: #000;
+}
+
+.player-wrap {
+  position: absolute;
+  height: 60px;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.player-wrap .player {
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  flex-flow: row nowrap;
+  border-top: solid 2px #fff;
+  max-width: 100%;
+}
+
+.player-wrap .player .player-info-wrap {
+  background: #000;
+  min-width: 200px;
+  height: 100%;
+  box-sizing: border-box;
+  border-right: solid 2px #fff;
+}
+
+@media screen and (min-width: 800px) {
+  .player-wrap .player .player-info-wrap {
+    min-width: 240px;
+  }
+}
+
+@media screen and (min-width: 1000px) {
+  .player-wrap .player .player-info-wrap {
+    min-width: 300px;
+  }
+}
+
+.player-wrap .player .player-info-wrap .player-info {
+  background: #000000;
+  height: 60px;
+  border-right: none;
+  border-left: none;
+  display: block;
+  padding-left: 4px;
+  transition: height 300ms;
+}
+
+.player-wrap .player .player-info-wrap .player-info .artwork {
+  height: 100%;
+  width: 25%;
+  float: left;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: left;
+  justify-content: center;
+}
+
+.player-wrap .player .player-info-wrap .player-info .artwork img.artwork-image {
+  width: 50px;
+  height: 50px;
+}
+
+.player-wrap .player .player-info-wrap .player-info .meta {
+  height: 100%;
+  text-transform: uppercase;
+  width: 75%;
+  font-family: "Lato";
+  float: left;
+  color: #ffffff;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: left;
+  box-sizing: border-box;
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  justify-content: space-between;
+  transition: padding 300ms;
+}
+
+.player-wrap .player .player-info-wrap .player-info .meta .title {
+  display: block;
+}
+
+.player-wrap .player .player-info-wrap .player-info .meta .title[data-size="size-n"] {
+  font-size: 20px;
+  letter-spacing: 3px;
+}
+
+.player-wrap .player .player-info-wrap .player-info .meta .title[data-size="size-m"] {
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+@media screen and (min-width: 600px) {
+  .player-wrap .player .player-info-wrap .player-info .meta .title[data-size="size-m"] {
+    font-size: 13px;
+  }
+}
+
+.player-wrap .player .player-info-wrap .player-info .meta .title[data-size="size-l"] {
+  font-size: 10px;
+  letter-spacing: 1px;
+}
+
+.player-wrap .player .player-info-wrap .player-info .meta .title[data-size="size-xl"] {
+  font-size: 6px;
+  letter-spacing: 2px;
+}
+
+@media screen and (min-width: 600px) {
+  .player-wrap .player .player-info-wrap .player-info .meta .title[data-size="size-xl"] {
+    font-size: 7px;
+  }
+}
+
+.player-wrap .player .player-info-wrap .player-info .meta div.artist {
+  border-left: solid 1px white;
+  padding-left: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
+
+.player-wrap .player .player-slider-wrap {
+  position: relative;
+  background: #000;
+  width: 100%;
+  height: 100%;
+  min-width: 300px;
+}
+
+.player-wrap .player .player-slider-wrap .slider-display {
+  position: relative;
+  background: #000000;
+  width: 100%;
+  height: 100%;
+  user-select: none;
+}
+
+.player-wrap .player .player-slider-wrap .slider-display:hover .bar .time-display {
+  opacity: 0;
+  transition: opacity 150ms;
+}
+
+.player-wrap .player .player-slider-wrap .slider-display .bar {
+  background: #a71cfc;
+  box-sizing: border-box;
+  width: 0;
+  transition: width 500ms;
+  height: 100%;
+  z-index: 10%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.player-wrap .player .player-slider-wrap .slider-display .bar .time-display {
+  opacity: 1;
+  transition: opacity 150ms;
+  font-family: "Oswald";
+  letter-spacing: 2px;
+  font-size: 16px;
+  width: 80px;
+  height: 100%;
+  position: relative;
+  flex-flow: row nowrap;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.player-wrap .player .player-slider-wrap .slider-display .bar .time-display span {
+  line-height: 56px;
+}
+
+.player-wrap .player .player-slider-wrap .slider-display .bar-hover {
+  opacity: 0;
+  width: 0;
+  height: 100%;
+  z-index: 100;
+  transition: opacity 150ms;
+  position: absolute;
+  left: 0;
+  top: 0;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: flex-end;
+  background: rgba(78, 2, 125, 0.8);
+}
+
+.player-wrap .player .player-slider-wrap .slider-display .bar-hover .hover-time-display {
+  font-family: "Oswald";
+  letter-spacing: 2px;
+  font-size: 16px;
+  width: 80px;
+  height: 100%;
+  position: relative;
+  flex-flow: row nowrap;
+  align-items: flex-end;
+  justify-content: flex-end;
+}
+
+.player-wrap .player .player-slider-wrap .slider-display .bar-hover .hover-time-display span {
+  line-height: 56px;
+}
+
+.player-wrap .player .player-slider-wrap .slider-display:hover {
+  cursor: crosshair;
+}
+
+.player-wrap .player .player-slider-wrap .slider-display:hover .bar-hover {
+  opacity: 1;
+  transition: opacity 150ms;
+}
+
+.player-wrap .player .player-control-wrap {
+  background: #000;
+  height: 100%;
+  min-width: 240px;
+  border-left: solid 2px #fff;
+  color: #fff;
+}
+
+.player-wrap .player .player-control-wrap .player-control {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+}
+
+.player-wrap .player .player-control-wrap .player-control .control {
+  width: 25%;
+  height: 100%;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  justify-content: center;
+  transition: background 150ms;
+  background: #000;
+}
+
+.player-wrap .player .player-control-wrap .player-control .control span {
+  font-size: 25px;
+}
+
+.player-wrap .player .player-control-wrap .player-control .control:hover {
+  cursor: pointer;
+  background: #4e027d;
+  transition: background 150ms;
+}
+
+.player-wrap .player .player-control-wrap .player-control .control.play {
+  width: 25%;
+}

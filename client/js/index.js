@@ -187,15 +187,15 @@ var SoundCloudLoader = function(client_id) {
 	}
 }
 
-$(document).ready(function() {
-  var constraints = window.constraints = {
-    audio: true,
-    video: false
-  };
-
-  navigator.getUserMedia({audio:true},function(s) {
-  console.log(s)
-},function(s) {
-    console.log(s);
-  })
-})
+// $(document).ready(function() {
+//   var constraints = window.constraints = {
+//     audio: true,
+//     video: false
+//   };
+//
+//   navigator.getUserMedia({audio:true},function(s) {
+//   console.log(s)
+// },function(s) {
+//     console.log(s);
+//   })
+// })

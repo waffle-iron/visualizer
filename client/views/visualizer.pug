@@ -13,7 +13,8 @@ html
     script(type='text/javascript', src='js/jquery.min.js')
     script(type='text/javascript', src='js/webmidi.min.js')
     script(type='text/javascript', src='js/math.min.js')
-    link(rel='stylesheet', href='./pagestyle.css')
+    link(rel='stylesheet', href='styles/pagestyle.css')
+    link(rel='stylesheet', href='styles/player.css')
     link(rel='shortcut icon', type='image/png', href='img/favicon.ico')
   body#Body(bgcolor='#000000')
     .ImageClip
@@ -46,6 +47,33 @@ html
         a#Link1(href='https://github.com/TheNexusAvenger/Monstercat-Audio-Spectrum-Visualizer/', target='_blank') GitHub 
         br
         a#Link2(href='https://www.roblox.com/games/435042236/Monstercat-Style-Audio-Spectrum-Visualizer', target='_blank') ROBLOX Place
+    .player-wrap
+      .player
+        .player-info-wrap
+          .player-info
+            .artwork
+              img.artwork-image
+            .meta
+              .title(data-size="size-n")
+              .artist
+        .player-slider-wrap
+          .slider-display
+            .bar
+              .time-display
+                span
+            .bar-hover
+              .hover-time-display
+                span
+        .player-control-wrap
+          .player-control
+            .prev.control
+              span.icon.icon-control-start
+            .play.control(data-state="paused")
+              span.icon.icon-control-play
+            .next.control
+              span.icon.icon-control-end
+            .vol.control
+              span.icon.icon-volume-2
     script(type='text/javascript', src='js/index.js')
     script(type='text/javascript', src='js/helpers/config.js')
     script(type='text/javascript', src='js/helpers/colors.js')
