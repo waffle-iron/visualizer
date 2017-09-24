@@ -1,5 +1,6 @@
 body {
   background: #000;
+  overflow: hidden;
 }
 
 $widthSm: 600px;
@@ -9,6 +10,7 @@ $widthLg: 1000px;
 $themeColor: #8D03E2;
 
 .player-wrap {
+  z-index: 1000;
   position: absolute;
   height: 60px;
   bottom: 0;
@@ -42,9 +44,11 @@ $themeColor: #8D03E2;
         display: block;
         padding-left: 4px;
         transition: height 300ms;
+        display: flex;
+        flex-flow: row nowrap;
         .artwork {
-          height: 100%;
-          width: 25%;
+          height: 60px;
+          width: 60px;
           float: left;
           display: flex;
           flex-flow: column nowrap;
@@ -58,7 +62,7 @@ $themeColor: #8D03E2;
         .meta {
           height: 100%;
           text-transform: uppercase;
-          width: 75%;
+          width: 100%;
           font-family: "Lato";
           float: left;
           color: #ffffff;
@@ -218,7 +222,14 @@ $themeColor: #8D03E2;
           transition: background 150ms;
           background: #000;
           span {
+            color: #000;
             font-size: 25px;
+            width: 30px;
+            height: 30px;
+            line-height: 38px;
+            text-align: center;
+            background: darken($themeColor,20%);
+            border-radius: 60px;
           }
           &:hover {
             cursor: pointer;

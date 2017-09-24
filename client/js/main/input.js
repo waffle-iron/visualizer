@@ -69,7 +69,7 @@ function UpdateText() {
 
 Body.addEventListener("mousemove", function(Key) {
 	LastDisplayed = Date.now()
-	UpdateText()
+	// UpdateText()
 })
 
 Body.addEventListener("keydown", function(Key) {
@@ -87,11 +87,11 @@ Body.addEventListener("keydown", function(Key) {
 				TimePausedAt = Time - StartTime - CurrentTimeOffset
         audio.pause();
 			}
-			UpdateText()
+			// UpdateText()
 		} else if (KeyCode == "KeyE") {
 			if (EncodingEnabled == true) {
 				DownloadSongData = !DownloadSongData
-				UpdateText()
+				// UpdateText()
 			}
 		} else if (KeyCode == "KeyA") {
       addSoundcloudToQueue(prompt("Soundcloud URL:"));
@@ -101,14 +101,14 @@ Body.addEventListener("keydown", function(Key) {
 				Volume = 100
 			}
 			UpdateVolume()
-			UpdateText()
+			// UpdateText()
 		} else if (KeyCode == "ArrowDown") {
 			Volume = Volume - 5
 			if (Volume < 0) {
 				Volume = 0
 			}
 			UpdateVolume()
-			UpdateText()
+			// UpdateText()
 		} else if (KeyCode == "KeyO") {
 			if (Stopped != true) {
 				Stopped = true
@@ -142,7 +142,7 @@ if (LastVolume) {
 		Volume = NewVolume
 	}
 }
-UpdateText()
+// UpdateText()
 UpdateVolume()
 
 function pauses() {

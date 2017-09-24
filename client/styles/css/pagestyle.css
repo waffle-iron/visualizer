@@ -21,7 +21,7 @@ canvas {
   z-index: 998;
 }
 
-div {
+.changeThis {
   height: 0px;
   margin: 0px;
   position: relative;
@@ -31,31 +31,31 @@ div {
   z-index: 998;
 }
 
-div.MainDiv {
+.changeThis.MainDiv {
   left: 50%;
   top: 50%;
   display: none;
 }
 
-div.ColorBackground {
+.changeThis.ColorBackground {
   height: 100%;
   position: absolute;
   width: 100%;
   z-index: 200;
 }
 
-div.TextDiv1 {
+.changeThis.TextDiv1 {
   position: absolute;
   overflow: hidden;
 }
 
-div.TextDiv2 {
+.changeThis.TextDiv2 {
   position: absolute;
   overflow: hidden;
   display: none;
 }
 
-div.ImageClip {
+.changeThis.ImageClip {
   position: absolute;
   overflow: hidden;
   height: 100%;
@@ -63,20 +63,20 @@ div.ImageClip {
   z-index: 1;
 }
 
-div.LowerTextDiv {
+.changeThis.LowerTextDiv {
   height: 2.5%;
   width: 100%;
   position: absolute;
   top: 97%;
 }
 
-div.LoadingDiv {
+.changeThis.LoadingDiv {
   height: 100%;
   position: absolute;
   width: 100%;
 }
 
-div.ParticleBackground {
+.changeThis.ParticleBackground {
   opacity: 0;
   height: 100%;
   width: 100%;
@@ -91,7 +91,7 @@ html {
   height: 100%;
 }
 
-img {
+.changeThisImg {
   height: 0px;
   width: 0px;
   position: absolute;
@@ -100,14 +100,14 @@ img {
   pointer-events: none;
 }
 
-img.BackgroundImage {
+.changeThisImg.BackgroundImage {
   left: 50%;
   top: 50%;
   height: 0px;
   width: 0px;
 }
 
-img.LogoDiv {
+.changeThisImg.LogoDiv {
   background-color: #FFFFFF;
   z-index: 999;
 }

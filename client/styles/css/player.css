@@ -1,8 +1,10 @@
 body {
   background: #000;
+  overflow: hidden;
 }
 
 .player-wrap {
+  z-index: 1000;
   position: absolute;
   height: 60px;
   bottom: 0;
@@ -48,11 +50,13 @@ body {
   display: block;
   padding-left: 4px;
   transition: height 300ms;
+  display: flex;
+  flex-flow: row nowrap;
 }
 
 .player-wrap .player .player-info-wrap .player-info .artwork {
-  height: 100%;
-  width: 25%;
+  height: 60px;
+  width: 60px;
   float: left;
   display: flex;
   flex-flow: column nowrap;
@@ -68,7 +72,7 @@ body {
 .player-wrap .player .player-info-wrap .player-info .meta {
   height: 100%;
   text-transform: uppercase;
-  width: 75%;
+  width: 100%;
   font-family: "Lato";
   float: left;
   color: #ffffff;
@@ -248,7 +252,14 @@ body {
 }
 
 .player-wrap .player .player-control-wrap .player-control .control span {
+  color: #000;
   font-size: 25px;
+  width: 30px;
+  height: 30px;
+  line-height: 38px;
+  text-align: center;
+  background: #4e027d;
+  border-radius: 60px;
 }
 
 .player-wrap .player .player-control-wrap .player-control .control:hover {

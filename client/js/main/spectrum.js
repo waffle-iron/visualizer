@@ -132,9 +132,9 @@ function ResizeFrames(CurrentTime) {
 	AlbumSongTitle2Text.style["text-shadow"] = TextDistance + Math.floor(2 * ShadowMult) + "px #000000"
 	AlbumSongTitle3Text.style["text-shadow"] = TextDistance + Math.floor(2 * ShadowMult) + "px #000000"
 
-	var LowerTextFontSize = LowerTextDiv.clientHeight + "px"
-	LeftText.style["font-size"] = LowerTextFontSize
-	RightText.style["font-size"] = LowerTextFontSize
+	// var LowerTextFontSize = LowerTextDiv.clientHeight + "px"
+	// LeftText.style["font-size"] = LowerTextFontSize
+	// RightText.style["font-size"] = LowerTextFontSize
 
 	LoadingText.style["font-size"] = LoadingText.clientHeight + "px"
 	return Mult
@@ -161,7 +161,7 @@ function EaseSineOut(Number) {
 
 
 function HandleAudio() {
-	UpdateTextVisibility()
+	// UpdateTextVisibility()
 	if (StartTime == 0) {
 		ResizeFrames(0, 0)
 		return
@@ -303,6 +303,7 @@ var playNextSongInQueue = function() {
   nextSongInQueue();
   audio.oncanplay = function() {
     playCurrentSong();
+    audio.oncanplay = function(){}
   }
 
 }
