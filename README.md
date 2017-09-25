@@ -11,3 +11,8 @@ A Monstercat-styled (at least for now) visualizer, a combination of [The Nexus A
 
 * [Linea Icons](linea.io) by [Dario](dario.io)
 * [The Nexus Avenger's](https://github.com/TheNexusAvenger) and [caseif's](https://github.com/caseif) work were my starting point for this project of mine.
+
+
+## License
+
+It's [here](LICENSE).
