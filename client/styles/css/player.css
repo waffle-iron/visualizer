@@ -20,6 +20,8 @@ body {
   flex-flow: row nowrap;
   border-top: solid 2px #fff;
   max-width: 100%;
+  box-sizing: border-box;
+  padding-right: 40px;
 }
 
 .player-wrap .player .player-info-wrap {

@@ -295,6 +295,7 @@ function stop() {
 
 function addToQueue(song) {
 	queue.push(song);
+  appendToQueue(song,queueSpot + 1);
 }
 
 function nextSongInQueue() {
@@ -321,6 +322,7 @@ function nextSongInQueue() {
 }
 
 function playCurrentSong() {
+  setNowPlaying(queueSpot)
 	audio.play().then(function() {
 		$(".control.play").attr("data-state", "playing");
 		$(".control.play").children("span").removeClass("icon-music-play-button");
@@ -430,12 +432,24 @@ function addSoundcloudToQueue(url) {
 			artist = trackData[0];
 			title = trackData[1];
 		}
+    var titleLength = function(t) {
+      if (t.length > 25) {
+        return "size-xl";
+      } else if (t.length > 16) {
+        return "size-l";
+      } else if (t.length > 8) {
+        return "size-m"
+      } else {
+        return "size-n";
+      }
+    } (title);
 		addToQueue({
 			type: "soundcloud",
 			meta: {
 				title: title,
 				artist: artist,
-				albumArtworkUrl: artworkURL
+				albumArtworkUrl: artworkURL,
+        size: titleLength
 			},
 			data: {
 				url: url

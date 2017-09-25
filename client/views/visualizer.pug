@@ -14,11 +14,18 @@ html
     script(type='text/javascript', src='js/webmidi.min.js')
     script(type='text/javascript', src='js/math.min.js')
     link(rel='stylesheet', href='assets/linea/music/styles.css')
+    link(rel='stylesheet', href='assets/linea/arrows/styles.css')
     link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Lato|Oswald')
     link(rel='stylesheet', href='styles/pagestyle.css')
+    link(rel='stylesheet', href='styles/queue.css') 
     link(rel='stylesheet', href='styles/player.css')
     link(rel='shortcut icon', type='image/png', href='img/favicon.ico')
   body#Body(bgcolor='#000000')
+    .queue-wrap.closed
+      .queue-arrow
+        span.icona-arrows-circle-left
+      .queue
+        .queue-list
     .player-wrap
       .player
         .player-info-wrap
@@ -68,11 +75,11 @@ html
     script(type='text/javascript', src='js/index.js')
     script(type='text/javascript', src='js/helpers/config.js')
     script(type='text/javascript', src='js/helpers/colors.js')
-    script(type='text/javascript', src='js/helpers/songutil.js')
     script(type='text/javascript', src='js/helpers/albumcovers.js')
     script(type='text/javascript', src='js/helpers/download.js')
     script(type='text/javascript', src='js/helpers/analyser.js')
     script(type='text/javascript', src='js/helpers/urlsearch.js')
+    script(type='text/javascript', src='js/helpers/songutil.js')
     script(type='text/javascript', src='js/songdata/songs.js')
     script(type='text/javascript', src='js/songdata/albums.js')
     script(type='text/javascript', src='js/songdata/backgrounds.js')
@@ -88,3 +95,4 @@ html
     script(type='text/javascript', src='js/moment.min.js')
     script(type='text/javascript', src='js/chroma.min.js')
     script(type='text/javascript', src='js/helpers/player.js')
+    script(type='text/javascript', src='js/helpers/queue.js')

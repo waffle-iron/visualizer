@@ -1,0 +1,146 @@
+.queue-wrap {
+  position: absolute;
+  z-index: 1001;
+  right: 0;
+  top: 0;
+  width: 300px;
+  height: 100%;
+  transition: right 300ms, width 300ms;
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: left;
+  justify-content: center;
+}
+
+.queue-wrap.closed {
+  right: -280px;
+}
+
+.queue-wrap .queue-arrow {
+  height: 100%;
+  width: 20px;
+  background: black;
+  border: none;
+  color: #ffffff;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: center;
+  justify-content: center;
+  transition: width 300ms;
+  border-right: solid 2px #fff;
+}
+
+.queue-wrap .queue-arrow:focus {
+  outline: none;
+}
+
+.queue-wrap .queue-arrow:hover {
+  cursor: pointer;
+}
+
+.queue-wrap .queue-arrow .closed {
+  width: 40px;
+}
+
+.queue-wrap .queue {
+  display: block;
+  float: left;
+  height: 100%;
+  width: 280px;
+  background: #000000;
+  overflow-y: scroll;
+  padding-left: 4px;
+}
+
+.queue-wrap .queue .queue-list .queue-item {
+  background: #000000;
+  height: 70px;
+  margin-bottom: 4px;
+  border: solid 1px white;
+  border-right: none;
+  border-left: none;
+  display: block;
+  padding-left: 4px;
+  transition: height 300ms;
+}
+
+.queue-wrap .queue .queue-list .queue-item.now-playing {
+  height: 100px;
+}
+
+.queue-wrap .queue .queue-list .queue-item.now-playing .meta {
+  padding-top: 25px;
+  padding-bottom: 25px;
+}
+
+.queue-wrap .queue .queue-list .queue-item.now-playing .artwork {
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: left;
+  justify-content: center;
+}
+
+.queue-wrap .queue .queue-list .queue-item .artwork {
+  height: 100%;
+  width: 25%;
+  float: left;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: left;
+  justify-content: center;
+}
+
+.queue-wrap .queue .queue-list .queue-item .artwork img.artwork-image {
+  width: 50px;
+  height: 50px;
+}
+
+.queue-wrap .queue .queue-list .queue-item .meta {
+  height: 100%;
+  text-transform: uppercase;
+  width: 75%;
+  font-family: "Lato";
+  float: left;
+  color: #ffffff;
+  display: flex;
+  flex-flow: column nowrap;
+  align-items: left;
+  box-sizing: border-box;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  justify-content: space-between;
+  transition: padding 300ms;
+}
+
+.queue-wrap .queue .queue-list .queue-item .meta .title {
+  display: block;
+}
+
+.queue-wrap .queue .queue-list .queue-item .meta .title.size-n {
+  font-size: 30px;
+  letter-spacing: 3px;
+}
+
+.queue-wrap .queue .queue-list .queue-item .meta .title.size-m {
+  font-size: 23px;
+  letter-spacing: 2px;
+}
+
+.queue-wrap .queue .queue-list .queue-item .meta .title.size-l {
+  font-size: 16px;
+  letter-spacing: 1px;
+}
+
+.queue-wrap .queue .queue-list .queue-item .meta .title.size-xl {
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+
+.queue-wrap .queue .queue-list .queue-item .meta div.artist {
+  border-left: solid 1px white;
+  padding-left: 8px;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  font-size: 10px;
+  letter-spacing: 2px;
+}
