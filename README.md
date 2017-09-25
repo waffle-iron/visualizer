@@ -1,5 +1,5 @@
-[![Waffle.io - Issues in progress](https://badge.waffle.io/spacegeek224/visualizer.png?label=in%20progress&title=In%20Progress)](https://waffle.io/spacegeek224/visualizer?utm_source=badge)
 # A Music Visualizer
+[![Waffle.io - Issues in progress](https://badge.waffle.io/spacegeek224/visualizer.png?label=in%20progress&title=In%20Progress)](https://waffle.io/spacegeek224/visualizer?utm_source=badge)
 
 A Monstercat-styled (at least for now) visualizer, a combination of [The Nexus Avenger's](https://github.com/TheNexusAvenger/Monstercat-Audio-Spectrum-Visualizer) and [caseif's](https://github.com/caseif/vis.js/) work (mostly for the graphics as a starting point), that I've been rebuilding, and improving.
 
