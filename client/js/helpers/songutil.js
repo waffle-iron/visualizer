@@ -63,7 +63,7 @@ var begun = false;
 
 function Preload(ImageUrl) {
 	var Img = new Image();
-	Img.src = ImageUrl;
+	Img.src = "/image/href?="+ImageUrl; // TODO: Change/Move to better place
 }
 
 var CachedAudio = []
@@ -118,6 +118,7 @@ function initNodes() {
 var CachedAudio = []
 
 function LoadSound(ArtistLogo, Album) {
+  var currentSong = queue[queueSpot]; // TODO: Move to better place
 	StartTime = false
 
 	Stopped = false
@@ -133,16 +134,16 @@ function LoadSound(ArtistLogo, Album) {
 	var AlbumImageLink = "img/albums/" + Album + ".png"
 	Preload(MonstercatLogo.innerHTML)
 	AlbumRotations[0] = [0.5 * 1000, "Open"]
-	if (ArtistLogo != null) {
-		Preload(ArtistLogo)
+	if (currentSong.meta.artistLogoURL != null) {
+		Preload(currentSong.meta.artistLogoURL)
 		AlbumRotations[AlbumRotations.length] = [15 * 1000, "Turn", ArtistLogo]
 	}
-	if (AlbumImageLink != undefined) {
-		Preload(AlbumImageLink)
+	if (currentSong.meta.albumArtworkURL != undefined) {
+		Preload(currentSong.meta.albumArtworkURL);
 		AlbumRotations[AlbumRotations.length] = [30 * 1000, "Turn", AlbumImageLink]
 		AlbumRotations[AlbumRotations.length] = [TimeLength - (30 * 1000), "Turn", ArtistLogo]
 	}
-	if (ArtistLogo != null) {
+	if (currentSong.meta.artistLogoURL != null) {
 		AlbumRotations[AlbumRotations.length] = [TimeLength - (15 * 1000), "Turn"]
 	}
 	AlbumRotations[AlbumRotations.length] = [TimeLength - (0.5 * 1000), "Close"]
@@ -333,8 +334,8 @@ function playCurrentSong() {
 		SingleLineSongName = RemoveNewLines(SongName)
 		SingleLineArtistName = RemoveNewLines(ArtistName)
 		GenreName = "Electro";
-		var ArtistLogo = currentSong.albumArtworkUrl; //Change to artist profile picture & move album art to separate variable
-		var Album = "saf";
+		var ArtistLogo = currentSong.albumArtworkURL; //Change to artist profile picture & move album art to separate variable
+		var Album = currentSong.albumArtworkURL;
 
 
 		GenreColor = GetColorFromGenre(GenreName)
@@ -426,6 +427,7 @@ function addSoundcloudToQueue(url) {
 		var artworkURL = track.artwork_url;
 		var artist = track.user.username
 		var stream = track.stream_url + "?client_id=3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc";
+    var artistLogoURL = track.user.avatar_url;
 		// addToQueue([artist, title, "Electro", stream, artworkURL, "4usingle"])
 		if (artist == "Monstercat") {
 			var trackData = title.split("-");
@@ -448,8 +450,9 @@ function addSoundcloudToQueue(url) {
 			meta: {
 				title: title,
 				artist: artist,
-				albumArtworkUrl: artworkURL,
-        size: titleLength
+				albumArtworkURL: artworkURL,
+        size: titleLength,
+        artistLogoURL: artistLogoURL
 			},
 			data: {
 				url: url
@@ -466,7 +469,7 @@ function addUrlToQueue(url, meta) {
 			meta: {
 				title: "URL",
 				artist: "SOURCE",
-				albumArtworkUrl: "none"
+				albumArtworkURL: "none"
 			},
 			data: {
 				url: url

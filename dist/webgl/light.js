@@ -1,1 +1,0 @@
-var _0x1224=["\x78","\x70\x6F\x73\x69\x74\x69\x6F\x6E","\x79","\x7A","\x61\x64\x64"];var pointLight= new THREE.PointLight(0xFFFFFF);pointLight[_0x1224[1]][_0x1224[0]]= 10;pointLight[_0x1224[1]][_0x1224[2]]= 50;pointLight[_0x1224[1]][_0x1224[3]]= 130;scene[_0x1224[4]](pointLight)
