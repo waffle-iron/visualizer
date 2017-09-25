@@ -80,7 +80,7 @@ function PushValues(NewValue) {
 }
 
 function initNodes() {
-  // CreateSourceBuffer()
+	// CreateSourceBuffer()
 	Source = Context.createMediaElementSource(audio);
 	// Source.connect(GainNode);
 	delayNode.delayTime.value = 0.3;
@@ -100,7 +100,7 @@ function initNodes() {
 	// 		playSong(Songs[SongSpot]);
 	// 	}
 	// }
-  // Songs = new Array();
+	// Songs = new Array();
 	AudioNode.onaudioprocess = HandleAudio
 	Analyser.fftSize = FFTSize
 	Analyser.smoothingTimeConstant = 0
@@ -295,171 +295,190 @@ function stop() {
 
 function addToQueue(song) {
 	queue.push(song);
+  appendToQueue(song,queueSpot + 1);
 }
 
 function nextSongInQueue() {
-  if (queueSpot + 1 >= queue.length) {
-    queueSpot = 0;
-  } else {
-    queueSpot++;
-  }
-  currentSong = queue[queueSpot];
-  switch (currentSong.type) {
-    case "soundcloud":
-      sc.load({
-        track: currentSong.data.url,
-        player: '#audio'
-      });
-      break;
-    case "url":
-      audio.src = currentSong.data.url;
-      break;
-    default:
-      console.error("Unknown source: \"" + currentSong.type + "\"");
-      break;
-  }
+	if (queueSpot + 1 >= queue.length) {
+		queueSpot = 0;
+	} else {
+		queueSpot++;
+	}
+	currentSong = queue[queueSpot];
+	switch (currentSong.type) {
+		case "soundcloud":
+			sc.load({
+				track: currentSong.data.url,
+				player: '#audio'
+			});
+			break;
+		case "url":
+			audio.src = currentSong.data.url;
+			break;
+		default:
+			console.error("Unknown source: \"" + currentSong.type + "\"");
+			break;
+	}
 }
 
 function playCurrentSong() {
-  audio.play().then(function(){
+  setNowPlaying(queueSpot)
+	audio.play().then(function() {
+		$(".control.play").attr("data-state", "playing");
+		$(".control.play").children("span").removeClass("icon-music-play-button");
+		$(".control.play").children("span").addClass("icon-music-pause-button");
 
-	ArtistName = currentSong.meta.artist;
-	SongName = currentSong.meta.title;
-	SingleLineSongName = RemoveNewLines(SongName)
-	SingleLineArtistName = RemoveNewLines(ArtistName)
-	GenreName = "Electro";
-	var ArtistLogo = currentSong.albumArtworkUrl; //Change to artist profile picture & move album art to separate variable
-	var Album = "saf";
+		ArtistName = currentSong.meta.artist;
+		SongName = currentSong.meta.title;
+		SingleLineSongName = RemoveNewLines(SongName)
+		SingleLineArtistName = RemoveNewLines(ArtistName)
+		GenreName = "Electro";
+		var ArtistLogo = currentSong.albumArtworkUrl; //Change to artist profile picture & move album art to separate variable
+		var Album = "saf";
 
 
-	GenreColor = GetColorFromGenre(GenreName)
+		GenreColor = GetColorFromGenre(GenreName)
 
-	if (EncodeEnabledByDefault == true) {
-		DownloadSongData = true
-	} else {
-		DownloadSongData = false
-	}
-
-	RevertCustomBackgroundChanges()
-
-	var SongBackgroundOverride = SongBackgrounds[SingleLineSongName]
-	var AlbumBackgroundOverride = AlbumBackgrounds[Album]
-	var ArtistBackgroundOverride = ArtistBackgrounds[ArtistName]
-
-	var FullBackgroundData
-	if (SongBackgroundOverride) {
-		if (SongBackgroundOverride[0]) {
-			FullBackgroundData = SongBackgroundOverride[0]
+    updateColors(GenreColor);
+    updateInfo(currentSong);
+		if (EncodeEnabledByDefault == true) {
+			DownloadSongData = true
+		} else {
+			DownloadSongData = false
 		}
-		if (SongBackgroundOverride[1]) {
-			GenreColor = SongBackgroundOverride[1]
+
+		RevertCustomBackgroundChanges()
+
+		var SongBackgroundOverride = SongBackgrounds[SingleLineSongName]
+		var AlbumBackgroundOverride = AlbumBackgrounds[Album]
+		var ArtistBackgroundOverride = ArtistBackgrounds[ArtistName]
+
+		var FullBackgroundData
+		if (SongBackgroundOverride) {
+			if (SongBackgroundOverride[0]) {
+				FullBackgroundData = SongBackgroundOverride[0]
+			}
+			if (SongBackgroundOverride[1]) {
+				GenreColor = SongBackgroundOverride[1]
+			}
+			if (SongBackgroundOverride[2]) {
+				SongBackgroundOverride[2]()
+			}
+		} else if (AlbumBackgroundOverride) {
+			if (AlbumBackgroundOverride[0]) {
+				FullBackgroundData = AlbumBackgroundOverride[0]
+			}
+			if (AlbumBackgroundOverride[1]) {
+				GenreColor = AlbumBackgroundOverride[1]
+			}
+			if (AlbumBackgroundOverride[2]) {
+				AlbumBackgroundOverride[2]()
+			}
+		} else if (ArtistBackgroundOverride) {
+			if (ArtistBackgroundOverride[0]) {
+				FullBackgroundData = ArtistBackgroundOverride[0]
+			}
+			if (ArtistBackgroundOverride[1]) {
+				GenreColor = ArtistBackgroundOverride[1]
+			}
+			if (ArtistBackgroundOverride[2]) {
+				ArtistBackgroundOverride[2]()
+			}
 		}
-		if (SongBackgroundOverride[2]) {
-			SongBackgroundOverride[2]()
-		}
-	} else if (AlbumBackgroundOverride) {
-		if (AlbumBackgroundOverride[0]) {
-			FullBackgroundData = AlbumBackgroundOverride[0]
-		}
-		if (AlbumBackgroundOverride[1]) {
-			GenreColor = AlbumBackgroundOverride[1]
-		}
-		if (AlbumBackgroundOverride[2]) {
-			AlbumBackgroundOverride[2]()
-		}
-	} else if (ArtistBackgroundOverride) {
-		if (ArtistBackgroundOverride[0]) {
-			FullBackgroundData = ArtistBackgroundOverride[0]
-		}
-		if (ArtistBackgroundOverride[1]) {
-			GenreColor = ArtistBackgroundOverride[1]
-		}
-		if (ArtistBackgroundOverride[2]) {
-			ArtistBackgroundOverride[2]()
-		}
-	}
 
 
-	if (FullBackgroundData) {
-		DrawParticles = false
-		var BackgroundData = FullBackgroundData[Math.floor(Math.random() * FullBackgroundData.length)]
-		BackgroundImage.src = BackgroundData[0]
-		BackgroundWidth = BackgroundData[1]
-		BackgroundHeight = BackgroundData[2]
-		ColorBackground.style.backgroundColor = BackgroundData[3]
-	} else {
-		DrawParticles = true
-		BackgroundImage.src = "img/blankpixel.png"
-		ColorBackground.style.backgroundColor = "#000000"
-	}
+		if (FullBackgroundData) {
+			DrawParticles = false
+			var BackgroundData = FullBackgroundData[Math.floor(Math.random() * FullBackgroundData.length)]
+			BackgroundImage.src = BackgroundData[0]
+			BackgroundWidth = BackgroundData[1]
+			BackgroundHeight = BackgroundData[2]
+			ColorBackground.style.backgroundColor = BackgroundData[3]
+		} else {
+			DrawParticles = true
+			BackgroundImage.src = "img/blankpixel.png"
+			ColorBackground.style.backgroundColor = "#000000"
+		}
 
-	MainDiv.style.display = "none"
-	LoadingDiv.style.display = "block"
-	document.title = "Loading..."
-	if (GenreName != "") {
-		LoadingText.innerHTML = "Loading...<br>[" + GenreName + "] " + SingleLineArtistName + " - " + SingleLineSongName
-	} else {
-		LoadingText.innerHTML = "Loading...<br>" + SingleLineArtistName + " - " + SingleLineSongName
-	}
+		MainDiv.style.display = "none"
+		LoadingDiv.style.display = "block"
+		document.title = "Loading..."
+		if (GenreName != "") {
+			LoadingText.innerHTML = "Loading...<br>[" + GenreName + "] " + SingleLineArtistName + " - " + SingleLineSongName
+		} else {
+			LoadingText.innerHTML = "Loading...<br>" + SingleLineArtistName + " - " + SingleLineSongName
+		}
 
 
-	NextAlbumRotation = 0
-	AlbumRotations = []
-	NextTextCycle = 0
-	TextCycles = []
-	//Load sound
-	LoadSound(ArtistLogo, Album)
-	CreateNewFleck();
-});
+		NextAlbumRotation = 0
+		AlbumRotations = []
+		NextTextCycle = 0
+		TextCycles = []
+		//Load sound
+		LoadSound(ArtistLogo, Album)
+		CreateNewFleck();
+	});
 }
 
 function addSoundcloudToQueue(url) {
-  SC.resolve(url).then(function(track) {
+	SC.resolve(url).then(function(track) {
 		var title = track.title;
 		var artworkURL = track.artwork_url;
 		var artist = track.user.username
 		var stream = track.stream_url + "?client_id=3BimZt6WNvzdEFDGmj4oeCSZfgVPAoVc";
 		// addToQueue([artist, title, "Electro", stream, artworkURL, "4usingle"])
-    if (artist == "Monstercat") {
-      var trackData = title.split("-");
-      artist = trackData[0];
-      title = trackData[1];
-    }
-    addToQueue({
-      type: "soundcloud",
-      meta: {
-        title: title,
-        artist: artist,
-        albumArtworkUrl: artworkURL
-      },
-      data: {
-        url: url
+		if (artist == "Monstercat") {
+			var trackData = title.split("-");
+			artist = trackData[0];
+			title = trackData[1];
+		}
+    var titleLength = function(t) {
+      if (t.length > 25) {
+        return "size-xl";
+      } else if (t.length > 16) {
+        return "size-l";
+      } else if (t.length > 8) {
+        return "size-m"
+      } else {
+        return "size-n";
       }
-    });
+    } (title);
+		addToQueue({
+			type: "soundcloud",
+			meta: {
+				title: title,
+				artist: artist,
+				albumArtworkUrl: artworkURL,
+        size: titleLength
+			},
+			data: {
+				url: url
+			}
+		});
 		console.log(track);
 	});
 }
 
 function addUrlToQueue(url, meta) {
-  if (meta == null) {
-    addToQueue({
-      type: "url",
-      meta: {
-        title: "URL",
-        artist: "SOURCE",
-        albumArtworkUrl: "none"
-      },
-      data: {
-        url: url
-      }
-    });
-  } else {
-    addToQueue({
-      type: "url",
-      meta: meta,
-      data: {
-        url: url
-      }
-    });
-  }
+	if (meta == null) {
+		addToQueue({
+			type: "url",
+			meta: {
+				title: "URL",
+				artist: "SOURCE",
+				albumArtworkUrl: "none"
+			},
+			data: {
+				url: url
+			}
+		});
+	} else {
+		addToQueue({
+			type: "url",
+			meta: meta,
+			data: {
+				url: url
+			}
+		});
+	}
 }

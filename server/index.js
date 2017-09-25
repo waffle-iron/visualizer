@@ -68,11 +68,13 @@ var info = {
 var audioRoute = require('./routes/audio.js')(info,passport);
 var authRoute = require('./routes/auth.js')(info,passport);
 var styleRoute = require('./routes/styles.js')(info,passport);
+var assetRoute = require('./routes/assets.js')(info,passport);
 var userRoute = require('./routes/user.js')(info,passport);
 var mainRoute = require('./routes/main.js')(info,passport);
 app.use('/auth', authRoute);
 app.use('/audio', audioRoute);
 app.use('/styles', styleRoute);
+app.use('/assets', assetRoute);
 app.use('/user', userRoute);
 app.use('/', mainRoute);
 

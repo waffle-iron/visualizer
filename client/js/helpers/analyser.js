@@ -160,7 +160,7 @@ function TransformToVisualBins(dataArray, TimeArray) {
 	//     dataArray = controlSections(dataArray);
 	dataArray = experimentalTransform(dataArray);
 	dataArray = normalizeAmplitude(dataArray);
-	handlePad(dataArray);
+	// handlePad(dataArray);
 	return dataArray;
 }
 

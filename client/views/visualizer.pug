@@ -13,40 +13,19 @@ html
     script(type='text/javascript', src='js/jquery.min.js')
     script(type='text/javascript', src='js/webmidi.min.js')
     script(type='text/javascript', src='js/math.min.js')
+    link(rel='stylesheet', href='assets/linea/music/styles.css')
+    link(rel='stylesheet', href='assets/linea/arrows/styles.css')
+    link(rel='stylesheet', href='https://fonts.googleapis.com/css?family=Lato|Oswald')
     link(rel='stylesheet', href='styles/pagestyle.css')
+    link(rel='stylesheet', href='styles/queue.css') 
     link(rel='stylesheet', href='styles/player.css')
     link(rel='shortcut icon', type='image/png', href='img/favicon.ico')
   body#Body(bgcolor='#000000')
-    .ImageClip
-      img#BackgroundImage.BackgroundImage
-    #ColorBackground.ColorBackground
-    #ParticleBackground.ParticleBackground
-    #MainDiv.MainDiv(height='0px', width='0px')
-      canvas#MainCanvas
-      img#AlbumImage.AlbumImage(src='img/blankpixel.png')
-      img#MonstercatLogo(src='img/monstercatlogo.png')
-      #TextDiv.TextDiv1
-        p#Artist.ArtistName Artist Name
-        p#SongName.SongName Song Name
-      #AlbumTextDiv.TextDiv2
-        p#AlbumTitle.AlbumTitle Test for now
-        p#AlbumSongTitle1.AlbumSongTitle1 Test for now
-        p#AlbumSongTitle2.AlbumSongTitle2 Test for now
-        p#AlbumSongTitle3.AlbumSongTitle3 Test for now
-    #LoadingDiv.LoadingDiv
-      p#LoadingText.LoadingText
-    #LowerTextDiv.LowerTextDiv
-      audio#audio
-      p#LeftText.LeftText
-        | Press P to Pause
-        br
-        |  Export Data (E): No
-        br
-        |  Volume (Arrow Keys): 100%
-      p#RightText.RightText
-        a#Link1(href='https://github.com/TheNexusAvenger/Monstercat-Audio-Spectrum-Visualizer/', target='_blank') GitHub 
-        br
-        a#Link2(href='https://www.roblox.com/games/435042236/Monstercat-Style-Audio-Spectrum-Visualizer', target='_blank') ROBLOX Place
+    .queue-wrap.closed
+      .queue-arrow
+        span.icona-arrows-circle-left
+      .queue
+        .queue-list
     .player-wrap
       .player
         .player-info-wrap
@@ -66,22 +45,41 @@ html
                 span
         .player-control-wrap
           .player-control
-            .prev.control
-              span.icon.icon-control-start
-            .play.control(data-state="paused")
-              span.icon.icon-control-play
-            .next.control
-              span.icon.icon-control-end
-            .vol.control
+            .prev.control(data-control="prev")
+              span.icon.icon-music-beginning-button
+            .play.control(data-control="play", data-state="paused")
+              span.icon.icon-music-play-button
+            .next.control(data-control="next")
+              span.icon.icon-music-end-button
+            .vol.control(data-control="vol")
               span.icon.icon-volume-2
+    .ImageClip.changeThis
+      img#BackgroundImage.changeThisImg.BackgroundImage
+    #ColorBackground.changeThis.ColorBackground
+    #ParticleBackground.changeThis.ParticleBackground
+    #MainDiv.changeThis.MainDiv(height='0px', width='0px')
+      canvas#MainCanvas
+      img#AlbumImage.changeThisImg.AlbumImage(src='img/blankpixel.png')
+      img#MonstercatLogo.changeThisImg(src='img/monstercatlogo.png')
+      #TextDiv.changeThis.TextDiv1
+        p#Artist.ArtistName Artist Name
+        p#SongName.SongName Song Name
+      #AlbumTextDiv.changeThis.TextDiv2
+        p#AlbumTitle.AlbumTitle Test for now
+        p#AlbumSongTitle1.AlbumSongTitle1 Test for now
+        p#AlbumSongTitle2.AlbumSongTitle2 Test for now
+        p#AlbumSongTitle3.AlbumSongTitle3 Test for now
+    #LoadingDiv.changeThis.LoadingDiv
+      p#LoadingText.LoadingText
+    audio#audio
     script(type='text/javascript', src='js/index.js')
     script(type='text/javascript', src='js/helpers/config.js')
     script(type='text/javascript', src='js/helpers/colors.js')
-    script(type='text/javascript', src='js/helpers/songutil.js')
     script(type='text/javascript', src='js/helpers/albumcovers.js')
     script(type='text/javascript', src='js/helpers/download.js')
     script(type='text/javascript', src='js/helpers/analyser.js')
     script(type='text/javascript', src='js/helpers/urlsearch.js')
+    script(type='text/javascript', src='js/helpers/songutil.js')
     script(type='text/javascript', src='js/songdata/songs.js')
     script(type='text/javascript', src='js/songdata/albums.js')
     script(type='text/javascript', src='js/songdata/backgrounds.js')
@@ -94,3 +92,7 @@ html
     script(type='text/javascript', src='js/webgl/light.js')
     script(type='text/javascript', src='js/webgl/render.js')
     script(type='text/javascript', src='js/main/spectrum.js')
+    script(type='text/javascript', src='js/moment.min.js')
+    script(type='text/javascript', src='js/chroma.min.js')
+    script(type='text/javascript', src='js/helpers/player.js')
+    script(type='text/javascript', src='js/helpers/queue.js')
