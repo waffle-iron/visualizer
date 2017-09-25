@@ -174,7 +174,7 @@ function updateInfo(info) {
 	}(info.meta.title);
 	$meta.children(".title").text(info.meta.title);
 	$meta.children(".artist").text(info.meta.artist);
-	$artwork.children(".artwork-image").attr("src", info.albumArtworkUrl);
+	$artwork.children(".artwork-image").attr("src", info.albumArtworkURL);
 	$meta.children(".title").attr("data-size", titleLength);
 }
 
